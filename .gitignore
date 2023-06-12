@@ -2,4 +2,5 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/server/Ntier.API/Ntier.API.sln
+/Ntier.API/appsettings.json
+
