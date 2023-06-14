@@ -24,5 +24,36 @@ namespace Ntier.API.Controllers
                 return BadRequest( ex.Message );
             }
         }
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterUser( UserRegisterDTO userDTO )
+        {
+            try
+            {
+               await _userService.RegisterUserAsync( userDTO );
+               return Ok(new { message = "Register successfully" });
+            }
+            catch ( Exception ex ) {
+                return BadRequest( new { message = ex.Message } );
+            }
+
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUser( UserLoginDTO userLoginDTO )
+        {
+            try
+            {
+                var user = await _userService.LoginUserAsync(userLoginDTO);
+                return Ok( new
+                {
+                    data = user ,
+                    message = "Login successfully"
+                } );
+            }
+            catch( Exception ex )
+            {
+                return BadRequest( new { message = ex.Message } );
+            }
+        }
     }
 }

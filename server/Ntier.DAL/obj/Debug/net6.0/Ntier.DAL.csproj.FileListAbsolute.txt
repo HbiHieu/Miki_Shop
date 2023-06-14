@@ -12,3 +12,6 @@ C:\coode\Miki_Shop\server\Ntier.DAL\obj\Debug\net6.0\Ntier.DAL.pdb
 C:\coode\Miki_Shop\server\Ntier.DAL\obj\Debug\net6.0\ref\Ntier.DAL.dll
 C:\coode\Miki_Shop\server\Ntier.DAL\bin\Debug\net6.0\Ntier.DAL.runtimeconfig.json
 C:\coode\Miki_Shop\server\Ntier.DAL\obj\Debug\net6.0\Ntier.DAL.genruntimeconfig.cache
+C:\coode\Miki_Shop\server\Ntier.DAL\bin\Debug\net6.0\Ntier.DTO.dll
+C:\coode\Miki_Shop\server\Ntier.DAL\bin\Debug\net6.0\Ntier.DTO.pdb
+C:\coode\Miki_Shop\server\Ntier.DAL\obj\Debug\net6.0\Ntier.DAL.csproj.CopyComplete

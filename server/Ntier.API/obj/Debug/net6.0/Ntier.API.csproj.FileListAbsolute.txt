@@ -14,7 +14,6 @@ C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.EntityFrameworkCo
 C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
 C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
-C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.Identity.Client.dll
 C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
 C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
@@ -78,3 +77,4 @@ C:\coode\Miki_Shop\server\Ntier.API\obj\Debug\net6.0\refint\Ntier.API.dll
 C:\coode\Miki_Shop\server\Ntier.API\obj\Debug\net6.0\Ntier.API.pdb
 C:\coode\Miki_Shop\server\Ntier.API\obj\Debug\net6.0\Ntier.API.genruntimeconfig.cache
 C:\coode\Miki_Shop\server\Ntier.API\obj\Debug\net6.0\ref\Ntier.API.dll
+C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

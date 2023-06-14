@@ -12,7 +12,7 @@ namespace Ntier.BLL.Extentions
     public class AutoMapper : Profile
     {
         public AutoMapper() { 
-            CreateMap<User,UserDTO>().ReverseMap();
+            CreateMap<User,UserRegisterDTO>().ReverseMap();
         }
     }
 }

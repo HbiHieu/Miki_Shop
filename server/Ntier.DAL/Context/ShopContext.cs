@@ -6,27 +6,19 @@ using Ntier.DAL.Entities;
 
 namespace Ntier.DAL.Context
 {
-    public partial class ShopContext : DbContext
+    public class ShopContext : DbContext
     {
-        public ShopContext()
-        {
-        }
-
         public ShopContext(DbContextOptions<ShopContext> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<Category> Categories { get; set; } = null!;
-        public virtual DbSet<Order> Orders { get; set; } = null!;
-        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
-        public virtual DbSet<Product> Products { get; set; } = null!;
-        public virtual DbSet<ProductImage> ProductImages { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-        }
+        public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<OrderDetail> OrderDetails { get; set; } = null!;
+        public DbSet<Product> Products { get; set; } = null!;
+        public DbSet<ProductImage> ProductImages { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -177,12 +169,9 @@ namespace Ntier.DAL.Context
                 entity.Property(e => e.Role)
                     .HasMaxLength(10)
                     .IsUnicode(false)
-                    .HasColumnName("ROLE");
+                    .HasColumnName("ROLE")
+                    .HasDefaultValueSql("('Member')");
             });
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

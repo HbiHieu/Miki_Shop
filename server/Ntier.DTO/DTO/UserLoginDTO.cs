@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Ntier.DTO.DTO
 {
-    public class UserDTO
+    public class UserLoginDTO
     {
-        public string Id { get; set; } = null!;
         public string Email { get; set; }
-        public string Name { get; set; }
-        public string Access_token { get; set; }
+        public string Password { get; set; }
     }
 }

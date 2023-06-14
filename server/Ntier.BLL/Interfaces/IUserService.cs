@@ -9,6 +9,9 @@ namespace Ntier.BLL.Interfaces
 {
     public interface IUserService
     {
-        public Task<ICollection<UserDTO>> GetUsersAsync();
+        public Task<ICollection<UserRegisterDTO>> GetUsersAsync();
+        public Task RegisterUserAsync(UserRegisterDTO userDTO);
+
+        public Task<UserDTO?> LoginUserAsync(UserLoginDTO userDTO);
     }
 }
