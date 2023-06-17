@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Ntier.BLL.Interfaces;
 using Ntier.DTO.DTO;
 
@@ -13,6 +14,7 @@ namespace Ntier.API.Controllers
             _userService = userService;
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetAllUser() {
             try
             {
@@ -53,6 +55,20 @@ namespace Ntier.API.Controllers
             catch( Exception ex )
             {
                 return BadRequest( new { message = ex.Message } );
+            }
+        }
+
+        [HttpPost("refreshToken")]
+        public async Task<IActionResult> GetNewAccessToken( string userId )
+        {
+            try
+            {
+                string jwt = await _userService.GetNewAccessTokenAsync(userId);
+                return Ok(jwt);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

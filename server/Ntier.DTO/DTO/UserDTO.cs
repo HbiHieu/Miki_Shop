@@ -11,6 +11,12 @@ namespace Ntier.DTO.DTO
         public string Id { get; set; } = null!;
         public string Email { get; set; }
         public string Name { get; set; }
+
+        public string Role { get; set; }
         public string Access_token { get; set; }
+
+        public DateTime Expire_At { get; set; }
+
+        public string Refresh_Token { get; set; } 
     }
 }

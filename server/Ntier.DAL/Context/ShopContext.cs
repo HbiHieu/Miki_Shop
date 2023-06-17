@@ -6,19 +6,24 @@ using Ntier.DAL.Entities;
 
 namespace Ntier.DAL.Context
 {
-    public class ShopContext : DbContext
+    public partial class ShopContext : DbContext
     {
+        public ShopContext()
+        {
+        }
+
         public ShopContext(DbContextOptions<ShopContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Category> Categories { get; set; } = null!;
-        public DbSet<Order> Orders { get; set; } = null!;
-        public DbSet<OrderDetail> OrderDetails { get; set; } = null!;
-        public DbSet<Product> Products { get; set; } = null!;
-        public DbSet<ProductImage> ProductImages { get; set; } = null!;
-        public DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<Category> Categories { get; set; } = null!;
+        public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
+        public virtual DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<ProductImage> ProductImages { get; set; } = null!;
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -142,6 +147,32 @@ namespace Ntier.DAL.Context
                     .HasConstraintName("FK__PRODUCT_I__PRODU__440B1D61");
             });
 
+            modelBuilder.Entity<RefreshToken>(entity =>
+            {
+                entity.ToTable("REFRESH_TOKEN");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ExpireAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("EXPIRE_AT");
+
+                entity.Property(e => e.RefreshTk)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("REFRESH_TK");
+
+                entity.Property(e => e.Userid)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("USERID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.RefreshTokens)
+                    .HasForeignKey(d => d.Userid)
+                    .HasConstraintName("FK__REFRESH_T__USERI__06CD04F7");
+            });
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("USER");
@@ -152,13 +183,12 @@ namespace Ntier.DAL.Context
                     .HasColumnName("ID");
 
                 entity.Property(e => e.Email)
-                    .HasMaxLength(20)
+                    .HasMaxLength(40)
                     .IsUnicode(false)
                     .HasColumnName("EMAIL");
 
                 entity.Property(e => e.Name)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
+                    .HasMaxLength(30)
                     .HasColumnName("NAME");
 
                 entity.Property(e => e.Password)
@@ -172,6 +202,10 @@ namespace Ntier.DAL.Context
                     .HasColumnName("ROLE")
                     .HasDefaultValueSql("('Member')");
             });
+
+            OnModelCreatingPartial(modelBuilder);
         }
+
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

@@ -16,7 +16,7 @@ namespace Ntier.DAL
     {
      public static void RegisterDALDependencies( this IServiceCollection services , IConfiguration configuration)
     {
-            services.AddDbContextPool<ShopContext>(options =>
+            services.AddDbContext<ShopContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("SQL")) ;
             });

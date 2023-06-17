@@ -1,4 +1,5 @@
-﻿using Ntier.DTO.DTO;
+﻿using Ntier.DAL.Entities;
+using Ntier.DTO.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,11 @@ namespace Ntier.BLL.Interfaces
         public Task RegisterUserAsync(UserRegisterDTO userDTO);
 
         public Task<UserDTO?> LoginUserAsync(UserLoginDTO userDTO);
+
+        public Task<string> GenerateAccessToken(User user);
+
+        public Task<string> GenerateRefreshToken(User user);
+
+        public Task<string> GetNewAccessTokenAsync( string userId );
     }
 }

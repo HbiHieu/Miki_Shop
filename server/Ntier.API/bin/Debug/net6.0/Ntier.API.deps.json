@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "Ntier.API/1.0.0": {
         "dependencies": {
+          "Microsoft.AspNet.Cors": "5.2.9",
           "Ntier.BLL": "1.0.0",
           "Swashbuckle.AspNetCore": "6.2.3"
         },
@@ -35,6 +36,14 @@
           "lib/netstandard2.1/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {
             "assemblyVersion": "12.0.0.0",
             "fileVersion": "12.0.1.0"
+          }
+        }
+      },
+      "Microsoft.AspNet.Cors/5.2.9": {
+        "runtime": {
+          "lib/net45/System.Web.Cors.dll": {
+            "assemblyVersion": "5.2.9.0",
+            "fileVersion": "5.2.61129.10"
           }
         }
       },
@@ -605,6 +614,13 @@
       "sha512": "sha512-+g/K+Vpe3gGMKGzjslMOdqNlkikScDjWfVvmWTayrDHaG/n2pPmFBMa+jKX1r/h6BDGFdkyRjAuhFE3ykW+r1g==",
       "path": "automapper.extensions.microsoft.dependencyinjection/12.0.1",
       "hashPath": "automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512"
+    },
+    "Microsoft.AspNet.Cors/5.2.9": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-LUjfvaOu0q9bz523CYmIE06Q9EttrpKuRLm3T83spF6oX+dYiFlLJFLm4RveGKq/puRJC5KTnXdbWGLqM783jA==",
+      "path": "microsoft.aspnet.cors/5.2.9",
+      "hashPath": "microsoft.aspnet.cors.5.2.9.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authentication.JwtBearer/6.0.11": {
       "type": "package",

@@ -11,7 +11,14 @@ namespace Ntier.DAL.Interfaces
     public interface IUserRepository
     {
         Task<ICollection<User>> GetUsersAsync();
+
+        Task<User?> GetUserByIdAsync(string id);
         Task<User?> AddUserAsync( UserRegisterDTO userDTO );
         Task<User?> CheckUserAsync( UserLoginDTO userLoginDTO );
+
+        Task AddRefreshTokenAsync(RefreshToken refreshToken);
+        Task RemoveAccessTokenAsync(string userId); 
+
+        Task<RefreshToken> GetRefreshTokenAsync(string userId);
     }
 }

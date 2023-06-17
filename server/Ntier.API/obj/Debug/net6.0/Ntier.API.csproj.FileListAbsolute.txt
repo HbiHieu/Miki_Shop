@@ -78,3 +78,4 @@ C:\coode\Miki_Shop\server\Ntier.API\obj\Debug\net6.0\Ntier.API.pdb
 C:\coode\Miki_Shop\server\Ntier.API\obj\Debug\net6.0\Ntier.API.genruntimeconfig.cache
 C:\coode\Miki_Shop\server\Ntier.API\obj\Debug\net6.0\ref\Ntier.API.dll
 C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\System.Web.Cors.dll
