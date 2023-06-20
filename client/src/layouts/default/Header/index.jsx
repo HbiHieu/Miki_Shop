@@ -2,20 +2,21 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue, selector, useResetRecoilState } from 'recoil';
+import { useRecoilValue, selector, useResetRecoilState, useRecoilState } from 'recoil';
 import { IconDown, LogoIcon, SearchIcon, UserIcon, CartIcon, Account, Purchase, Logout } from 'src/components/icons';
 import { cartState } from 'src/recoils/cartState';
 import { dataUser } from 'src/recoils/dataUser';
 
 
 export function Header() {
-   const user = useRecoilValue(dataUser)
-   const checkRole = user.role === 'admin' ? '/admin' : '/profile';
-   const checkLogin = user.role ? checkRole : '/login';
 
-   const LogOut = useResetRecoilState(dataUser);
+   const [user, setUser] = useRecoilState(dataUser);
 
-
+   const LogOut = () => {
+      setUser("");
+      localStorage.clear();
+      console.log(user);
+   };
 
    const [searchTerm, setSearchTerm] = useState('')
    const [products, setProducts] = useState([])
@@ -24,6 +25,7 @@ export function Header() {
 
    const cart = useRecoilValue(cartState);
    const [isSSR, setIsSSR] = useState(true);
+
    useEffect(() => {
       setIsSSR(false);
    }, []);
@@ -190,20 +192,17 @@ export function Header() {
                   }
                   {hidden &&
                      <div className='relative group'>
-                        <Link href={checkLogin}>
-                           <a>
-
-                              <UserIcon
-                                 className={'ml-[35px] cursor-pointer hover:opacity-60'}
-                              />
-                           </a>
-
-                        </Link>
-
+                        <UserIcon
+                           className={'ml-[35px] cursor-pointer hover:opacity-60'}
+                        />
                         <div className='absolute bottom-[-138px] right-[-52px] z-20 hidden group-hover:block animate-growth'>
                            <div className='border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent w-[0px] h-[0px] border-b-[12px] border-b-primary_5 shadow-lg ml-[120px]'></div>
-                           <ul className='shadow-xl bg-primary_5 cursor-pointer'>
-                              <li className='w-[200px]  text-left px-3 py-2 leading-7 text-base hover:bg-primary_2 hover:text-white font-bold'>
+                           <ul className='shadow-xl cursor-pointer bg-primary_5'>
+                              <li
+                                 onClick={() => {
+                                    router.push(user.role == "Admin" ? "/admin" : "/profile");
+                                 }}
+                                 className='w-[200px]  text-left px-3 py-2 leading-7 text-base hover:bg-primary_2 hover:text-white font-bold'>
                                  <span className='flex items-center justify-start'>
                                     <Account />
                                     <p className='ml-2'>Tài khoản của tôi</p>
@@ -220,13 +219,17 @@ export function Header() {
                               <li className='w-[200px] text-left px-3 py-2 leading-7 text-base hover:bg-primary_2 hover:text-white font-bold'>
                                  <span
                                     onClick={() => {
-                                       LogOut(),
-                                          router.replace('/')
+                                       if (user) {
+                                          LogOut()
+                                       }
+                                       else {
+                                          router.push("/login");
+                                       }
                                     }
                                     }
-                                    className='flex items-center justify-start'>
+                                    className='flex items-center justify-start logout'>
                                     <Logout />
-                                    <p className='ml-2'>Đăng xuất</p>
+                                    {!isSSR && <p className='ml-2'>{user ? "Đăng xuất" : "Đăng nhập"}</p>}
                                  </span>
                               </li>
                            </ul>

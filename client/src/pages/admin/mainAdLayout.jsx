@@ -7,11 +7,6 @@ export default function MainAdLayout({ children }) {
     const [option, setOption] = useState(false);
     const [option2, setOption2] = useState(false);
 
-
-
-
-
-
     return (
 
         (<div className='grid grid-cols-12'>

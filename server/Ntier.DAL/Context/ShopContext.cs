@@ -22,6 +22,8 @@ namespace Ntier.DAL.Context
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductImage> ProductImages { get; set; } = null!;
+        public virtual DbSet<ProductSize> ProductSizes { get; set; } = null!;
+        public virtual DbSet<ProductSizeDetail> ProductSizeDetails { get; set; } = null!;
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
 
@@ -35,7 +37,6 @@ namespace Ntier.DAL.Context
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(20)
-                    .IsUnicode(false)
                     .HasColumnName("NAME");
             });
 
@@ -74,63 +75,61 @@ namespace Ntier.DAL.Context
 
                 entity.Property(e => e.OrderId).HasColumnName("ORDER_ID");
 
-                entity.Property(e => e.ProductId).HasColumnName("PRODUCT_ID");
+                entity.Property(e => e.ProductId)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("PRODUCT_ID");
 
                 entity.Property(e => e.Quantity).HasColumnName("QUANTITY");
 
                 entity.HasOne(d => d.Order)
                     .WithMany()
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__ORDER_DET__ORDER__4222D4EF");
+                    .HasConstraintName("FK__ORDER_DET__ORDER__32AB8735");
 
                 entity.HasOne(d => d.Product)
                     .WithMany()
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__ORDER_DET__PRODU__4316F928");
+                    .HasConstraintName("FK__ORDER_DET__PRODU__3587F3E0");
             });
 
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("PRODUCT");
 
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.Amount).HasColumnName("AMOUNT");
+                entity.Property(e => e.Id)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("ID");
 
                 entity.Property(e => e.CategoryId).HasColumnName("CATEGORY_ID");
 
-                entity.Property(e => e.Color)
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
-                    .HasColumnName("COLOR");
+                entity.Property(e => e.CreateAt)
+                    .HasColumnType("datetime")
+                    .HasColumnName("CREATE_AT");
 
                 entity.Property(e => e.Description)
                     .HasColumnType("text")
                     .HasColumnName("DESCRIPTION");
 
+                entity.Property(e => e.MinPrice).HasColumnName("MIN_PRICE");
+
                 entity.Property(e => e.Name)
-                    .HasMaxLength(20)
-                    .IsUnicode(false)
+                    .HasMaxLength(40)
                     .HasColumnName("NAME");
 
-                entity.Property(e => e.Price).HasColumnName("PRICE");
-
-                entity.Property(e => e.Quantity).HasColumnName("QUANTITY");
-
                 entity.Property(e => e.Sale).HasColumnName("SALE");
-
-                entity.Property(e => e.Size).HasColumnName("SIZE");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK__PRODUCT__CATEGOR__403A8C7D");
+                    .HasConstraintName("FK__PRODUCT__CATEGOR__2CF2ADDF");
             });
 
             modelBuilder.Entity<ProductImage>(entity =>
             {
                 entity.HasKey(e => e.Url)
-                    .HasName("PK__PRODUCT___C5B10008B2EBC627");
+                    .HasName("PK__PRODUCT___C5B100083B40F9CD");
 
                 entity.ToTable("PRODUCT_IMAGE");
 
@@ -139,12 +138,57 @@ namespace Ntier.DAL.Context
                     .IsUnicode(false)
                     .HasColumnName("URL");
 
-                entity.Property(e => e.ProductId).HasColumnName("PRODUCT_ID");
+                entity.Property(e => e.Index).HasColumnName("INDEX");
+
+                entity.Property(e => e.ProductId)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("PRODUCT_ID");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.ProductImages)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__PRODUCT_I__PRODU__440B1D61");
+                    .HasConstraintName("FK__PRODUCT_I__PRODU__395884C4");
+            });
+
+            modelBuilder.Entity<ProductSize>(entity =>
+            {
+                entity.ToTable("PRODUCT_SIZE");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Size).HasColumnName("SIZE");
+            });
+
+            modelBuilder.Entity<ProductSizeDetail>(entity =>
+            {
+                entity.HasKey(e => new { e.ProductId, e.SizeId })
+                    .HasName("PK__PRODUCT___9420F6C487A5BC55");
+
+                entity.ToTable("PRODUCT_SIZE_DETAIL");
+
+                entity.Property(e => e.ProductId)
+                    .HasMaxLength(20)
+                    .IsUnicode(false)
+                    .HasColumnName("PRODUCT_ID");
+
+                entity.Property(e => e.SizeId).HasColumnName("SIZE_ID");
+
+                entity.Property(e => e.Price).HasColumnName("PRICE");
+
+                entity.Property(e => e.Quantity).HasColumnName("QUANTITY");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductSizeDetails)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PRODUCT_S__PRODU__3D2915A8");
+
+                entity.HasOne(d => d.Size)
+                    .WithMany(p => p.ProductSizeDetails)
+                    .HasForeignKey(d => d.SizeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__PRODUCT_S__SIZE___3E1D39E1");
             });
 
             modelBuilder.Entity<RefreshToken>(entity =>

@@ -9,25 +9,25 @@ function SortProducts({ setPage, setSort, sortList, setSortList, toggleActive, a
     };
 
     const handleSortAscName = () => {
-        setSort('name=asc')
+        setSort('name&order=asc')
         setPage(1);
         toggleActive();
     };
 
     const handleSortDescName = () => {
-        setSort('name=desc')
+        setSort('name&order=desc')
         setPage(1);
         toggleActive();
     };
 
     const handleSortAscCost = () => {
-        setSort('cost=asc')
+        setSort('price&order=asc')
         setPage(1);
         toggleActive();
     };
 
     const handleSortDescCost = () => {
-        setSort('cost=desc')
+        setSort('price&order=desc')
         setPage(1);
         toggleActive();
     };
@@ -72,43 +72,43 @@ function SortProducts({ setPage, setSort, sortList, setSortList, toggleActive, a
             >
                 <li
                     onClick={handleSortDefault}
-                    className="cursor-pointer hover:opacity-100 opacity-80 h-6"
+                    className="h-6 cursor-pointer hover:opacity-100 opacity-80"
                 >
                     Mặc định
                 </li>
                 <li
                     onClick={handleSortAscName}
-                    className="cursor-pointer hover:opacity-100 opacity-80 h-6"
+                    className="h-6 cursor-pointer hover:opacity-100 opacity-80"
                 >
                     A-Z
                 </li>
                 <li
                     onClick={handleSortDescName}
-                    className="cursor-pointer hover:opacity-100 opacity-80 h-6"
+                    className="h-6 cursor-pointer hover:opacity-100 opacity-80"
                 >
                     Z-A
                 </li>
                 <li
                     onClick={handleSortAscCost}
-                    className="cursor-pointer hover:opacity-100 opacity-80 h-6"
+                    className="h-6 cursor-pointer hover:opacity-100 opacity-80"
                 >
                     Giá tăng dần
                 </li>
                 <li
                     onClick={handleSortDescCost}
-                    className="cursor-pointer hover:opacity-100 opacity-80 h-6"
+                    className="h-6 cursor-pointer hover:opacity-100 opacity-80"
                 >
                     Giá giảm dần
                 </li>
                 <li
                     onClick={handleSortNew}
-                    className="cursor-pointer hover:opacity-100 opacity-80 h-6"
+                    className="h-6 cursor-pointer hover:opacity-100 opacity-80"
                 >
                     Sản phẩm mới
                 </li>
                 <li
                     onClick={handleSortSale}
-                    className="cursor-pointer hover:opacity-100 opacity-80 h-6"
+                    className="h-6 cursor-pointer hover:opacity-100 opacity-80"
                 >
                     Sản phẩm ưu đãi
                 </li>

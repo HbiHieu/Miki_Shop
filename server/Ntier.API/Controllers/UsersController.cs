@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ntier.BLL.Interfaces;
-using Ntier.DTO.DTO;
+using Ntier.DTO.DTO.User;
 
 namespace Ntier.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : Controller
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
         public UsersController( IUserService userService ) {

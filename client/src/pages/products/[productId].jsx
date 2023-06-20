@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import Page from 'src/components/Page';
 import ToastMessage from 'src/components/ToastMessage';
 import MainLayout from 'src/layouts';
@@ -10,29 +11,50 @@ import ProductDetailsSection3 from 'src/sections/main/products/ProductDetailsSec
 
 ProductDetails.getLayout = (page) => <MainLayout>{page}</MainLayout>;
 
-export const getStaticPaths = async () => {
-  const res = await axios({
-    method: 'GET',
-    url: 'http://localhost:3000/api/products/getAllProducts'
-  })
-  const products = res.data.products
-  const paths = products?.map(product => ({
-    params: { productId: '' + product.slug }
-  }))
-  return { paths, fallback: false }
-}
+// export const getStaticPaths = async () => {
+//   const res = await axios({
+//     method: 'GET',
+//     url: 'https://localhost:7226/api/Products'
+//   })
+//   const products = res.data;
+//   const paths = products?.map(product => ({
+//     params: { productId: product.id }
+//   }))
+//   return { paths, fallback: false }
+// }
 
-export const getStaticProps = async ({ params }) => {
-  const res = await axios({
-    method: 'GET',
-    url: `http://localhost:3000/api/products/${params.productId}`
-  })
-  const product = res.data.product
-  return { props: { product } }
-}
+// export const getStaticProps = async ({ params }) => {
+//   console.log(params)
+//   const res = await axios({
+//     method: 'GET',
+//     url: `https://localhost:7226/api/Products/${params}`
+//   })
+//   const product = res.data;
+//   return { props: { product } }
+// }
 
-export default function ProductDetails({ product }) {
-  console.log(product);
+export default function ProductDetails() {
+  const [product, setProduct] = useState();
+  const router = useRouter();
+  useEffect(() => {
+    if (router.isReady) {
+      try {
+        const fetch = async () => {
+          console.log(router);
+          const res = await axios({
+            method: 'GET',
+            url: `https://localhost:7226/api/Products/${router.query.productId}`
+          })
+          console.log(res);
+          setProduct(res.data);
+        }
+        fetch();
+      }
+      catch (ex) {
+        console.log(ex);
+      }
+    }
+  }, [router.isReady])
   const [toast, setToast] = useState(false);
   return (
     <div>
@@ -47,9 +69,9 @@ export default function ProductDetails({ product }) {
       {toast &&
         <ToastMessage />
       }
-      <ProductDetailsSection1 product={product[0]} setToast={setToast} />
-      <ProductDetailsSection2 product={product[0]} />
-      <ProductDetailsSection3 product={product[0]} />
+      <ProductDetailsSection1 product={product} setToast={setToast} />
+      <ProductDetailsSection2 product={product} />
+      <ProductDetailsSection3 product={product} />
     </div>
   );
 }

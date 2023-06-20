@@ -13,7 +13,7 @@ function ProductsPage(props) {
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(null);
 
-  const [sort, setSort] = useState('');
+  const [sort, setSort] = useState('name&order=asc');
 
   const [sortList, setSortList] = useState([]);
 
@@ -30,16 +30,18 @@ function ProductsPage(props) {
     try {
       const res = axios({
         method: 'GET',
-        url: `http://localhost:3000/api/products/pagination?page=${page}&limitProduct=10&${sort}`,
+        //url: `http://localhost:3000/api/products/pagination?page=${page}&limitProduct=10&${sort}`,
+        url: `https://localhost:7226/api/Products?page=${page}&sortBy=${sort}`,
       });
-      res.then((respon) => {
-        const datas = respon.data;
-        const { data, pagination } = datas;
-        const { _page, _limit, _totalProducts } = pagination;
-        const list = respon;
-        setSortList(datas.data); //Get list of products
+      res.then((response) => {
+        // const datas = respon.data;
+        // const { data, pagination } = datas;
+        // const { _page, _limit, _totalProducts } = pagination;
+        // const list = respon;
+        console.log(response);
+        setSortList(response.data); //Get list of products
         //setPagination(pagination);
-        setPageCount(Math.ceil(_totalProducts / _limit));
+        //setPageCount(Math.ceil(_totalProducts / _limit));
       });
     } catch (err) {
       console.log('Call API Error');
@@ -47,7 +49,7 @@ function ProductsPage(props) {
   };
 
   return (
-    <div className="font-main relative">
+    <div className="relative font-main">
       <div className="w-full h-[530px] overflow-hidden ">
         <img
           className="translate-y-[-450px]"

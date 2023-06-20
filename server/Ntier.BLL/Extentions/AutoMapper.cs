@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Ntier.DAL.Entities;
-using Ntier.DTO.DTO;
+using Ntier.DTO.DTO.Products;
+using Ntier.DTO.DTO.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,9 @@ namespace Ntier.BLL.Extentions
     {
         public AutoMapper() { 
             CreateMap<User,UserRegisterDTO>().ReverseMap();
+            CreateMap<ProductImage, ImageDTO>().ReverseMap();
+            CreateMap<ProductSizeDetail, StockDTO>().ReverseMap();
+            CreateMap<Product, ProductDTO>().ReverseMap();
         }
     }
 }

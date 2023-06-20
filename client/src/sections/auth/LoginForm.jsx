@@ -1,5 +1,4 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -36,27 +35,26 @@ export default function LoginFormSection() {
   const onSubmit = async (data) => {
     const res = axiosClient({
       method: 'POST',
-      url: '/login',
+      url: 'https://localhost:7226/api/Users/login',
       data: data,
     });
-    res.then(() => router.push('/')).catch((e) => setError(e.response.data));
+    res.then(() => router.push('/')).catch((e) => setError(e.response.data.message));
 
     res.then((rep) => {
-      const dataUser = rep.data;
+      const dataUser = rep.data.data;
       console.log(rep.data);
       const user = {
-        role: dataUser.user.role,
-        email: dataUser.user.email,
-        firstName: dataUser.user.userInfor.firstName,
-        lastName: dataUser.user.userInfor.lastName,
-        userInforId: dataUser.user.userInfor._id,
+        role: dataUser.role,
+        email: dataUser.email,
+        firstName: dataUser.name,
+        userInforId: dataUser.id,
+        accessExpire: dataUser.expire_At,
+        refreshToken: dataUser.refresh_Token,
       };
       setUser(user);
-      const accessToken = dataUser.accessToken;
+      const accessToken = dataUser.access_token;
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('user', JSON.stringify(user));
-
-      console.log(user);
     });
   };
 

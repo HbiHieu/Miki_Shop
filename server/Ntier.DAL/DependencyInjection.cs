@@ -21,6 +21,8 @@ namespace Ntier.DAL
                 options.UseSqlServer(configuration.GetConnectionString("SQL")) ;
             });
             services.AddScoped<IUserRepository,UserRepository>();
+            services.AddScoped<IProductsRepository, ProductsRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
    }
    }
 }

@@ -15,6 +15,8 @@ namespace Ntier.BLL
         {
             services.AddAutoMapper( typeof(Ntier.BLL.Extentions.AutoMapper) );
             services.AddScoped<IUserService,UserService>();
+            services.AddScoped<IProductsService, ProductsService>();
+            services.AddScoped<IImageService, ImageService>();
         }
     }
 }

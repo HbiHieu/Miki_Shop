@@ -1,5 +1,6 @@
 ﻿using Ntier.DAL.Entities;
 using Ntier.DTO.DTO;
+using Ntier.DTO.DTO.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;

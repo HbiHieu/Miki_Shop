@@ -24,11 +24,11 @@ function SortProductsAd(props) {
       >
         <option value="--Hành Động--">--Sắp xếp theo--</option>
         <option className='p-6 ml-2' value="">Mặc định</option>
-        <option className='p-6 ml-2' value="name=asc">A-Z</option>
-        <option className='p-6 ml-2' value="name=desc">Z-A</option>
-        <option className='p-6 ml-2' value="cost=asc">Giá tăng dần</option>
-        <option className='p-6 ml-2' value="cost=desc">Giá giảm dần</option>
-        <option className='p-6 ml-2' value="sale=desc">Sản phẩm ưu đãi</option>
+        <option className='p-6 ml-2' value="name&order=asc">A-Z</option>
+        <option className='p-6 ml-2' value="name&order=desc">Z-A</option>
+        <option className='p-6 ml-2' value="price&order=asc">Giá tăng dần</option>
+        <option className='p-6 ml-2' value="price&order=desc">Giá giảm dần</option>
+        <option className='p-6 ml-2' value="sale&order=desc">Sản phẩm ưu đãi</option>
         <option className='p-6 ml-2' value="new">Sản phẩm mới</option>
       </select>
     </div>

@@ -4,6 +4,7 @@ using Ntier.DAL.Context;
 using Ntier.DAL.Entities;
 using Ntier.DAL.Interfaces;
 using Ntier.DTO.DTO;
+using Ntier.DTO.DTO.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;

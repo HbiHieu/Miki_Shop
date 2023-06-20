@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useRouter } from 'next/router';
-import axios from 'axios';
+import { axiosClient } from 'src/utils/axios';
+import uniqid from 'uniqid';
 
 const schema = yup.object().shape({
   firstName: yup.string().required('*Bắt buộc'),
@@ -37,8 +38,19 @@ function RegisterForm() {
   });
 
   const submitForm = (data) => {
-    const res = axios({ method: 'POST', url: '/api/auth/register', data });
-    res.then(() => router.push('/login')).catch((e) => setError(e.response.data));
+    const user = {
+      id: uniqid(),
+      email: data.email,
+      password: data.password,
+      name: `${data.firstName} ${data.firstName}`
+    }
+    const res = axiosClient({
+      method: 'POST',
+      url: 'https://localhost:7226/api/Users/register',
+      data: user
+    });
+    res.then(() => router.push('/login'))
+      .catch((e) => setError(e.response.data.message));
   };
 
   return (
@@ -46,7 +58,7 @@ function RegisterForm() {
       onSubmit={handleSubmit(submitForm)}
       className="absolute left-[686px] w-[410px] top-[216px] mr-10"
     >
-      <h4 className="font-bold text-xl leading-7 text-black">Đăng ký tài khoản</h4>
+      <h4 className="text-xl font-bold leading-7 text-black">Đăng ký tài khoản</h4>
       <div className="flex gap-3 mt-8">
         {/* FirstName */}
         <div
@@ -200,20 +212,18 @@ function RegisterForm() {
         </p>
       </div>
 
-      <div className="pb-3 flex">
+      <div className="flex pb-3">
         <input type="checkbox" className="w-6 h-6 cursor-pointer register-checkbox" />
         <p className="font-medium font-main text-base tracking-[-0.019rem] pl-[9px]">
           Nhận thông tin khuyến mãi qua email
         </p>
       </div>
 
-      <div className=" flex">
+      <div className="flex ">
         <input
           {...register('agree')}
           type="checkbox"
-          className="w-6 h-6 cursor-pointer 
-                    register-checkbox
-                "
+          className="w-6 h-6 cursor-pointer register-checkbox "
         />
 
         <div className="w-[374px] font-medium font-main text-base tracking-[-0.019rem] ml-[9px]">

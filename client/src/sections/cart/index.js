@@ -3,9 +3,9 @@ import CartNav from 'src/sections/cart/CartNav';
 import { useRecoilValue } from 'recoil';
 import CartItemsList from './CartItemsList';
 import CartCalculation from './CartCalculation';
-import axios from 'axios';
 import { dataUser } from 'src/recoils/dataUser';
 import Link from 'next/link';
+import { axiosClient } from 'src/utils/axios';
 
 export default function CartMain() {
   const [cartItem, setCartItem] = useState([]);
@@ -18,10 +18,9 @@ export default function CartMain() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await axios({
-        method: 'POST',
-        url: '/api/cart/getCart',
-        data: { userId: user.userInforId },
+      const data = await axiosClient({
+        method: 'GET',
+        url: 'https://localhost:7226/api/Users',
       });
       console.log(data);
       setCartItem(data?.data);
@@ -39,14 +38,8 @@ export default function CartMain() {
       <CartNav />
       {cartItem.length != 0 ? (
         <div className="flex justify-between">
-          <CartItemsList
-           items={cartItem}
-            setItemState={setCartItem} />
-          <CartCalculation 
-          total={
-            totalCost
-          }
-           />
+          <CartItemsList items={cartItem} setItemState={setCartItem} />
+          <CartCalculation total={totalCost} />
         </div>
       ) : (
         <div className="h-[300px] flex items-center justify-center">

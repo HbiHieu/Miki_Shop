@@ -4,7 +4,6 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Arrow, IconStar } from 'src/components/icons';
 import { tabUIState } from 'src/recoils/tabUIState';
 import { FormatMoney } from 'src/utils/formatMoney';
-import Link from 'next/link';
 import { cartState, addToCart } from 'src/recoils/cartState';
 import { MinusIcon, PlusIcon } from 'src/components/icons';
 import { dataUser } from 'src/recoils/dataUser';
@@ -17,12 +16,10 @@ export default function ProductDetailsSection1({ product, setToast }) {
       setToogleTab(index)
    };
    //Size review
-   const [selectSizeState, setSelectSizeState] = useState(product?.amount?.[0].size)
+   const [selectSizeState, setSelectSizeState] = useState(product?.stocks?.[0].sizeId + 15)
    const handleSelectSize = (size) => {
       setSelectSizeState(size)
    };
-   //Color select
-   const [selectColor, setSelectColor] = useState(product?.amount?.[0].color?.[0]);
    //quantity select
    const [quantityState, setQuantityState] = useState(1)
    //handle image review
@@ -30,7 +27,7 @@ export default function ProductDetailsSection1({ product, setToast }) {
    //handleAddToCart
    const user = useRecoilValue(dataUser)
    const handleAddToCart = async (product) => {
-      const item = product.amount.filter((item) => item.size == selectSizeState)?.[0]
+      const item = product.stocks.filter((item) => item.size == selectSizeState)?.[0]
       const productId = product._id
       const size = +selectSizeState
       const name = product?.name
@@ -61,7 +58,7 @@ export default function ProductDetailsSection1({ product, setToast }) {
          setToast(false);
       }, 2200)
    }
-   //console.log(product.amount?.[0].color?.[0]);
+   //console.log(product.stocks?.[0].color?.[0]);
    return (
       <>
          <div className="mb-[69px] mt-[18px]">
@@ -84,12 +81,12 @@ export default function ProductDetailsSection1({ product, setToast }) {
             </ul>
             <div className="px-[152px] flex">
                <div className="h-[465px] pr-[40px] flex-col justify-between overflow-hidden">
-                  {product?.picture?.map((pic, index) => {
+                  {product?.pictures?.map((pic, index) => {
                      return (
                         <img
                            className={imageState === index + 1 ? 'imgProductDetail border-[3px] border-neutral_3' : 'imgProductDetail border-[1px] border-neutral_3'}
                            onClick={() => setImageState(index + 1)}
-                           key={pic._id}
+                           key={pic.index}
                            src={pic.url}
                            alt=""
                            width={156}
@@ -101,7 +98,7 @@ export default function ProductDetailsSection1({ product, setToast }) {
                <div className="pr-[40px]">
                   <img
                      className="mb-[12px] w-[450px] h-[465px] border-[2px] border-neutral_3 rounded-imgB"
-                     src={product?.picture[imageState - 1].url}
+                     src={product?.pictures[imageState - 1].url}
                      alt=""
                   />
                </div>
@@ -109,9 +106,9 @@ export default function ProductDetailsSection1({ product, setToast }) {
                   <h1 className="h-[50px] text-[22px] leading-[30px] font-bold">{product?.name}</h1>
                   <div className="flex mt-[20px]">
                      <a className='flex' href='#review' onClick={() => handleScroll(4)}>
-                        <p className="font-medium text-neutral_3 leading-[22px] mr-[8px]">{product?.rating}.0</p>
+                        <p className="font-medium text-neutral_3 leading-[22px] mr-[8px]">4.0</p>
                         <div className="flex mt-[2px] border-r-[2px] border-neutral_2 w-[80px] h-[15px] mr-[8px]">
-                           {[...Array(product?.rating)].map(() => {
+                           {[...Array(4)].map(() => {
                               return <IconStar fill="#FBBC05" />
                            })}
                            {(() => {
@@ -126,12 +123,12 @@ export default function ProductDetailsSection1({ product, setToast }) {
                      </a>
                      <p className="text-[14px] leading-[22px] font-medium mb-[2px] mr-[30px]">0 Đã bán</p>
                      <p className="text-base font-medium text-[#58C27D] leading-[20px]">
-                        Còn {product?.amount[0]?.quantity} sản phẩm
+                        Còn {product?.stocks[0]?.quantity} sản phẩm
                      </p>
                   </div>
                   <div className="flex items-center mt-[25px]">
                      <div className="h-[31px] relative text-neutral_2 text-[24px] leading-[32px] font-semibold min-w-[100px]">
-                        {(+product?.sale !== 0) && <FormatMoney money={+product?.amount[0]?.cost} />}
+                        {(+product?.sale !== 0) && <FormatMoney money={+product?.stocks[0]?.price} />}
                         {+product?.sale !== 0
                            &&
                            <div className="absolute w-full h-[2px] bg-neutral_2 bottom-1/2"></div>
@@ -150,43 +147,22 @@ export default function ProductDetailsSection1({ product, setToast }) {
                      {
                         (+product?.sale === 0)
                            ?
-                           <FormatMoney money={+product?.amount[0]?.cost} />
+                           <FormatMoney money={+product?.stocks[0]?.price} />
                            :
-                           <FormatMoney money={+product?.amount[0]?.cost - (+product?.amount[0]?.cost / 100 * product?.sale)} />
+                           <FormatMoney money={+product?.stocks[0]?.price - (+product?.stocks[0]?.price / 100 * product?.sale)} />
                      }
                   </h1>
                   <div className="flex items-center">
                      <p className="pr-[88px] text-base font-medium">Kích thước:</p>
                      {
-                        product?.amount?.map((item) => {
+                        product?.stocks?.map((item, index) => {
                            return (
-                              <p key={item._id} onClick={() => handleSelectSize(item.size)} className={selectSizeState == item.size ? 'selectSize bg-neutral_1 text-white' : 'selectSize'}>
-                                 {item.size}
+                              <p key={index} onClick={() => handleSelectSize(item.sizeId + 15)} className={selectSizeState == item.sizeId + 15 ? 'selectSize bg-neutral_1 text-white' : 'selectSize'}>
+                                 {item.sizeId + 15}
                               </p>
                            )
                         })
                      }
-                  </div>
-                  <div className="flex items-center mt-[24px]">
-                     <p className="pr-[107px] text-base font-medium">Màu sắc:</p>
-                     {/* Color */}
-                     {
-                        product?.amount.find((item) => item.size == selectSizeState)?.color?.map((itemColor) => {
-                           const color = itemColor == 'white' ? 'white' : itemColor == 'gold' ? 'primary_4' : 'gray-500'
-                           console.log(itemColor);
-                           return (
-                              <p key={itemColor} onClick={() => setSelectColor(itemColor)} className={selectColor === itemColor ? `relative w-[24px] h-[24px] bg-${color} rounded-[50%] ml-[24px] cursor-pointer selectColor1 shadow-xl` : `relative w-[24px] h-[24px] bg-${color} rounded-[50%] ml-[24px] cursor-pointer shadow-xl border-gray-300 border-[1px]
-                     `}
-                              >
-                              </p>
-                           )
-                        })
-                     }
-                     {/* End color */}
-                     {/* <p onClick={()=> handleSelectColor('brown')} className={selectColorState === 'brown' ? 'seclecColorProDetail selectColor1' : 'seclecColorProDetail'}></p>
-                  <p onClick={()=> handleSelectColor('blue')} className={selectColorState === 'blue' ? 'seclecColorProDetail selectColor1' : 'seclecColorProDetail'}></p> */}
-                     {/* <p onClick={()=> handleSelectColor('brown')} className={selectColorState === 'brown' ? 'relative w-[24px] h-[24px] bg-[#DDAB4A] rounded-[50%] ml-[24px] cursor-pointer selectColor1' : 'relative w-[24px] h-[24px] bg-[#DDAB4A] rounded-[50%] ml-[24px] cursor-pointer'}></p>
-                  <p onClick={()=> handleSelectColor('blue')} className={selectColorState === 'blue' ? 'relative w-[24px] h-[24px] bg-[#D6DEDE] rounded-[50%] ml-[24px] cursor-pointer selectColor1' : 'relative w-[24px] h-[24px] bg-[#D6DEDE] rounded-[50%] ml-[24px] cursor-pointer'}></p> */}
                   </div>
                   <div className="flex items-center mt-[8px] mb-10">
                      <p className="pr-[107px] text-base font-medium">Số lượng: </p>

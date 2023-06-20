@@ -39,30 +39,24 @@ export default function Product() {
 
     const handleApplyOptions = async () => {
         if (option == 'Xóa') {
-            const resData = await axios({
-                method: 'POST',
-                url: '/api/products/delete',
-                data: { id: checkPro },
-            });
-            const picDelete = currentProductPage
-                .map((pro) => {
-                    if (checkPro.includes(pro._id)) {
-                        return pro.picture.map((pic) => pic._id);
-                    }
-                })
-                .filter((pic) => pic != undefined)
-                .flat(Infinity);
-            console.log(picDelete);
-            const resDelte = await axios({
-                method: 'POST',
-                url: '/api/image/delete',
-                data: { files: picDelete },
-            });
-
-            notify();
-            setCurrentProductPage((prev) => prev.filter((item) => !checkPro.includes(item._id)));
-            setCheckPro([]);
-            console.log('ResData is..', resData);
+            try {
+                const resDeleteImages = await axios({
+                    method: 'DELETE',
+                    url: 'https://localhost:7226/api/Images/delete',
+                    data: checkPro,
+                });
+                const resDeleteProduct = await axios({
+                    method: 'DELETE',
+                    url: 'https://localhost:7226/api/Products/delete',
+                    data: checkPro,
+                });
+                notify();
+                setCurrentProductPage((prev) => prev.filter((item) => !checkPro.includes(item.id)));
+                setCheckPro([]);
+            }
+            catch (ex) {
+                console.log(ex);
+            }
         }
     };
 
@@ -101,43 +95,27 @@ export default function Product() {
     // state of Sort 
     const [sort, setSort] = useState('');
 
-    //convert money
-    const convertNumberToStringMoney = (number) => {
-        const stringArray = number.toString().split('').reverse();
-        const stringCV = stringArray
-            .reduce((string, number, index) => {
-                if ((index + 1) % 3 == 0) {
-                    return string + number + '.';
-                } else {
-                    return string + number;
-                }
-            }, '')
-            .split('')
-            .reverse()
-            .reduce((string, element) => string + element, '');
-        return stringCV[0] == '.' ? stringCV.slice(1) : stringCV;
-    };
-
     useEffect(() => {
         // declare the data fetching function
         const fetchData = async () => {
             const res = await axios({
                 method: 'GET',
-                url: `http://localhost:3000/api/products/pagination?page=${page}&limitProduct=10&${sort}`,
+                url: `https://localhost:7226/api/Products?page=${page}&sortBy=${sort}`,
             });
-            const datas = res.data;
-            const { data, pagination } = datas;
-            const { _page, _limit, _totalProducts } = pagination;
+            console.log(res);
+            //const { data, pagination } = datas;
+            //const { _page, _limit, _totalProducts } = pagination;
             //setPagination(pagination);
-            setPageCount(Math.ceil(_totalProducts / _limit));
+            //số trang
+            //setPageCount(Math.ceil(_totalProducts / _limit)); 
             //setProducts(products);
-            setCurrentProductPage(data);
+            setCurrentProductPage(res.data);
         }
         // call the function
         fetchData()
             // make sure to catch any error
             .catch(console.error);
-    }, [update, page, sort])
+    }, [page, sort])
 
     const tableToolbar = [
         {
@@ -158,13 +136,8 @@ export default function Product() {
         }, {
             style: "pr-8 text-sm",
             label: "Số lượng"
-        }, {
-            style: "pr-8 text-sm",
-            label: "Màu sắc"
-        }, {
-            style: "pr-8 text-sm",
-            label: " Giá"
-        },
+        }
+        ,
         {
             style: "pr-8 text-sm",
             label: " Chi tiết"
@@ -180,6 +153,8 @@ export default function Product() {
         // <th className='pr-8 text-sm font-bold pl-5 bg-[#514943] text-white border-l border-[#87807c]'>Chi tiết</th>
 
     ]
+
+    const category = ["Dây chuyền", "Nhẫn", "Lắc", "Bông tai"];
 
     return (
         <div className='m-5 bg-white'>
@@ -225,11 +200,11 @@ export default function Product() {
                     {
                         currentProductPage?.map((product, index) =>
                         (
-                            <tr className={index % 2 == 1 ? 'bg-[#ccc]' : 'bg-white'} key={product._id}>
+                            <tr className={index % 2 == 1 ? 'bg-[#ccc]' : 'bg-white'} key={product.id}>
                                 <td className='border-l border-b border-[#87807c] text-center'>
                                     <input
                                         type="checkbox"
-                                        id={product._id}
+                                        id={product.id}
                                         onChange={
                                             handleChangeCheckPro
                                         } />
@@ -237,45 +212,28 @@ export default function Product() {
                                 <td className={`border-l border-b border-[#87807c] text-center`}>{(page - 1) * 10 + index + 1}</td>
                                 <td className='w-[100px] h-[100px] text-sm font-bold border-l border-b border-[#87807c] '>
                                     <div className='w-[70px] h-[70px] m-auto border-[1px] border-[#ccc]'>
-                                        <img src={product.picture?.[0].url} className='object-contain object-center h-[70px] w-[70px]' />
+                                        <img src={product.pictures?.[0].url} className='object-contain object-center h-[70px] w-[70px]' />
                                     </div>
                                 </td>
                                 <td className='border-l border-b border-[#87807c] text-center'>
                                     {product.name}
                                 </td>
                                 <td className='border-l border-b border-[#87807c] text-center'>
-                                    {product.category}
+                                    {category[product.categoryId - 14]}
                                 </td>
                                 <td className='border-l border-b border-[#87807c] text-center'>
                                     {
-                                        product?.amount?.map((category) => {
-                                            return category.size;
+                                        product?.stocks?.map((stock) => {
+                                            const size = [16, 17, 18]
+                                            return size[stock.sizeId - 1];
                                         }).join(', ')
                                     }
                                 </td>
                                 <td className='border-l border-b border-[#87807c] text-center'>
                                     {
-                                        product?.amount?.reduce((total, category) => {
-                                            return total + Number(category.quantity);
+                                        product?.stocks?.reduce((total, category) => {
+                                            return total + category.quantity;
                                         }, 0)
-                                    }
-                                </td>
-                                <td className='border-l border-b border-[#87807c] text-center'>
-                                    {
-                                        product?.amount?.map((category) => {
-                                            return category.color
-                                        }).flat(Infinity).filter((color, index, colorArr) => {
-                                            return colorArr.indexOf(color) === index;
-                                        }).join(', ')
-                                    }
-                                </td>
-                                <td className='border-l border-b border-[#87807c] text-center'>
-                                    {
-                                        product?.amount?.map((category) => {
-                                            return convertNumberToStringMoney(category.cost);
-                                        })
-                                            .filter((cost, index, costArr) => costArr.indexOf(cost) === index).join(', ')
-
                                     }
                                 </td>
                                 <td className='border-l border-b border-[#87807c] text-center border-r'>
@@ -316,7 +274,7 @@ export default function Product() {
                     onPageActive={handleActivePage}
                     activeLinkClassName='active'
                     pageRangeDisplayed={3}
-                    pageCount={pageCount}
+                    pageCount={2}
                     pageClassName='pageLi'
                     previousLabel="< previous"
                     renderOnZeroPageCount={null}

@@ -5,14 +5,13 @@ import * as yup from 'yup';
 import axios from 'axios';
 import Page from 'src/components/Page';
 import { toast } from 'react-toastify';
+import uniqid from 'uniqid';
 import 'react-toastify/dist/ReactToastify.css';
-import { formatSearchString } from 'src/utils/formatString';
 
 
-const amountSchema = yup.object().shape({
+const stockSchema = yup.object().shape({
     quantity: yup.string().required("*Required"),
-    cost: yup.number().required("*Cost is required").typeError("Cost is required"),
-    color: yup.array().min(1, "Color is required").typeError("Color is required"),
+    price: yup.number().required("*price is required").typeError("price is required"),
 })
 
 const schema = yup.object().shape({
@@ -20,8 +19,8 @@ const schema = yup.object().shape({
     picture: yup.array().compact().min(1, "*Picture is required").nullable(),
     sale: yup.number().required("*Sale is required").typeError("*Sale is required"),
     desc: yup.string().required("*Description is required"),
-    amount: yup.array().min(1, "Size is required").of(
-        amountSchema
+    stock: yup.array().min(1, "Size is required").of(
+        stockSchema
     ),
     category: yup.string().required("Category is required")
 })
@@ -34,8 +33,8 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
             resolver: yupResolver(schema),
             defaultValues: {
                 name: currentPro.data.name,
-                category: currentPro.data.category,
-                amount: currentPro.data.amount,
+                category: currentPro.data.categoryId,
+                stock: currentPro.data.stocks,
                 sale: currentPro.data.sale,
                 desc: currentPro.data.desc,
             }
@@ -49,83 +48,144 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
     } = useFieldArray(
         {
             control,
-            name: "amount",
+            name: "stock",
         },
     );
 
+    //handle of picture 
+    const [mainPicture, setMainPicture] = useState(currentPro.data.pictures?.[0] || '');
+    const [pictures, setPictures] = useState(currentPro.data.pictures?.filter((picture, index) => {
+        return index !== 0;
+    }) || []);
+    console.log(mainPicture);
+    console.log('sub pic is', pictures);
+
+    // id anh de xoa
+    const [idPic, setIdPic] = useState([]);
+
+    //check xem co thay doi anh hay chua
+    const [changePic, setChangePic] = useState(false);
+
+    const [validate, setValidate] = useState(0);
+
     useEffect(() => {
-        size_field.length > 0 && clearErrors('amount')
+        size_field.length > 0 && clearErrors('stock')
     }, [size_field])
 
     console.log(currentPro);
 
     const onSubmit = async (data) => {
         console.log('Data is..', data)
-        if (idPic.filter((id) => id != undefined).length != 0) {
-            const resDelte = await axios({
-                method: 'POST',
-                url: '/api/image/delete',
-                data: { files: idPic }
-            });
-            console.log('Resdata is...', resDelte.data);
-        }
-        if (currentPro.isEdit) {
-            console.log('Data is', { ...data, id: currentPro.data._id });
-            var mpic = mainPicture
-            if (typeof mpic == 'string') {
+        try {
+            if (currentPro.isEdit) {
+                // Xoa anh da upload truoc do khi submit 
+                if (idPic.filter((id) => id != undefined).length != 0) {
+                    // goi api xoa anh o sever
+                    // const resDelte = await axios({
+                    //     method: 'POST',
+                    //     url: '/api/image/delete',
+                    //     data: { files: idPic }
+                    // });
+                    console.log('Resdata is...', resDelte.data);
+                }
+                // neu ma la edit 
+                console.log('Data is', { ...data, id: currentPro.data._id });
+                //upload anh chinh 
+                var mainpic = mainPicture
+                // kiem tra xem anh chinh co bi sua khong 
+                if (typeof mainpic == 'string') {
+                    const resPic = await axios({
+                        method: 'POST',
+                        url: '/api/image/upload',
+                        data: { file: mainpic }
+                    })
+                    mainpic = resPic?.data;
+                }
+
+                // loc ra nhung anh da day len sever va chua day len sever
+                const picCvCloud = pictures.filter((pic) => typeof pic == 'object');
+                const picNoneCvCloud = pictures.filter((pic) => typeof pic == 'string');
+
+                //upload nhung anh chua day len sever
                 const resPic = await axios({
                     method: 'POST',
                     url: '/api/image/upload',
-                    data: { file: mpic }
+                    data: { files: picNoneCvCloud }
+                });
+                console.log(picCvCloud, picNoneCvCloud);
+                console.log(resPic?.data?.result);
+                //setPictures([...picCvCloud, ...resPic?.data?.result]);
+                const resData = await axios({
+                    method: 'POST',
+                    url: '/api/products/update',
+                    data: { ...data, picture: [mainpic, ...picCvCloud, ...resPic?.data?.result], id: currentPro.data._id }
+                });
+                setUpdate((prev) => !prev);
+            } else {
+                // console.log('Data add is..', data);
+                //tao moi product
+                const minPrice = data.stock[0].price;
+                const stock = data.stock.map((item) => {
+                    if (item.price < minPrice) minPrice = item.price;
+                    return {
+                        sizeId: parseInt(item.size),
+                        quantity: parseInt(item.quantity),
+                        price: item.price
+                    }
+                });
+                const productId = uniqid();
+                const productToAdd = {
+                    id: productId,
+                    name: data.name,
+                    categoryId: parseInt(data.category),
+                    stock: stock,
+                    sale: data.sale,
+                    desc: data.desc,
+                    minPrice,
+                }
+                const resData = await axios({
+                    method: 'POST',
+                    url: 'https://localhost:7226/api/Products',
+                    data: productToAdd,
                 })
-                mpic = resPic?.data;
+                console.log(resData);
+                // //neu la them moi
+                const images = [mainPicture, ...pictures].map((item, index) => {
+                    return {
+                        url: item,
+                        productId,
+                        index,
+                    }
+                });
+                console.log(images);
+                const resPic = await axios({
+                    method: 'POST',
+                    url: 'https://localhost:7226/api/Images',
+                    data: images,
+                    // data la anh o dang base 64
+                });
+                console.log(resPic);
+                // anh cloudiary
+                // setProducts((prev) => {
+                //         return [...prev, resData.data];
+                //     })
+                setUpdate((prev) => !prev);
+                //setMainPicture('');
+                //setPictures([]);
+                //reset()
             }
-            const picCvCloud = pictures.filter((pic) => typeof pic == 'object');
-            const picNoneCvCloud = pictures.filter((pic) => typeof pic == 'string');
-            const resPic = await axios({
-                method: 'POST',
-                url: '/api/image/upload',
-                data: { files: picNoneCvCloud }
-            });
-            console.log(picCvCloud, picNoneCvCloud);
-            console.log(resPic?.data?.result);
-            //setPictures([...picCvCloud, ...resPic?.data?.result]);
-            const resData = await axios({
-                method: 'POST',
-                url: '/api/products/update',
-                data: { ...data, picture: [mpic, ...picCvCloud, ...resPic?.data?.result], id: currentPro.data._id }
-            });
-            setUpdate((prev) => !prev);
-        } else {
-            console.log('Data add is..', data);
-            const resPic = await axios({
-                method: 'POST',
-                url: '/api/image/upload',
-                data: { files: [mainPicture, ...pictures] }
-            })
-            const mainPic = resPic.data.result?.[0];
-            const subPic = resPic.data.result?.filter((pic, index) => index != 0)
-            console.log([mainPic, ...subPic]);
-            const resData = await axios({
-                method: 'POST',
-                url: '/api/products/create',
-                data: { ...data, picture: [mainPic, ...subPic], search: formatSearchString([data.name]) }
-            })
-            console.log(resData);
-            // setProducts((prev) => {
-            //     return [...prev, resData.data];
-            // })
-            setUpdate((prev) => !prev);
-            setMainPicture('');
-            setPictures([]);
-            reset()
+            notify(currentPro.isEdit);
+        }
+        catch (ex) {
+            console.log(ex);
         }
     }
 
+    // chuyen doi anh thanh base64 co phan biet anh chinh anh phu
     function getBase64(file, location) {
         var reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = async function () {
+        reader.onload = function () {
             if (location == 'main') {
                 const picMainConvertB64 = reader.result
                 //console.log('PicmainConvertBase64 is ', picMainConvertB64);
@@ -147,35 +207,27 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
         };
     }
 
-    //handle of picture 
-    const [mainPicture, setMainPicture] = useState(currentPro.data.picture?.[0] || '');
-    const [pictures, setPictures] = useState(currentPro.data.picture?.filter((picture, index) => {
-        return index !== 0;
-    }) || []);
-    console.log('main pic is', mainPicture);
-    console.log('sub pic is', pictures);
-    const [idPic, setIdPic] = useState([]);
-    const [changePic, setChangePic] = useState(false);
-    const [validate, setValidate] = useState(0);
-
-
-
-    console.log('idPic is', idPic);
-    // console.log('mainPic is', mainPicture, 'subPic is', pictures);
+    //xoa anh chinh dua id da xoa vao 1 mang 
+    //anh chua dc upload len sever se khong co id => xoa khong goi api , chi la thao tac tren client
     const handleDeleteMain = () => {
         (idPic.includes(currentPro.data.picture?.[0]?._id) ? null : setIdPic((prev) => [...prev, currentPro.data.picture?.[0]._id]))
         console.log(idPic);
         setMainPicture([]);
     }
 
+    //thay doi anh chinh
     const handleChangeMainPicture = (link) => {
         getBase64(link, 'main');
     }
+
+    //thay doi anh phu
     const handleChangePicture = (e) => {
         const file = e.target.files[0];
         getBase64(file, 'sub');
         e.target.value = null;
     }
+
+    //xoa anh phu , dua id vao 1 mang 
     const handleDelete = (indexDelete) => {
         (idPic.includes(currentPro.data.picture?.[indexDelete + 1]?._id) ? null : setIdPic((prev) => [...prev, currentPro.data.picture?.[indexDelete + 1]?._id]));
         setPictures((prev) => {
@@ -255,10 +307,10 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
                             {/* className='p-2 border-[1px] border-solid border-blue-400 text-blue-400 rounded-lg font-bold hover:opacity-80 mr-2' */}
                             <p className='my-3 text-xl font-bold'>Thể loại</p>
                             <select className='p-2 border-[1px] border-solid border-blue-400 text-blue-400 rounded-lg font-bold hover:opacity-80 mr-2'  {...register("category")} placeholder='Size'>
-                                <option value="dây chuyền">dây chuyền</option>
-                                <option value="nhẫn">nhẫn</option>
-                                <option value="lắc">lắc</option>
-                                <option value="bông tai">bông tai</option>
+                                <option value="14">dây chuyền</option>
+                                <option value="15">nhẫn</option>
+                                <option value="16">lắc</option>
+                                <option value="17">bông tai</option>
                             </select>
                         </div>
                         <p className="text-[#D2311B] text-base font-medium h-5">
@@ -343,50 +395,28 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
                                             <div className='p-3 my-4 drop-shadow-xl border-[1px] border-blue-400' key={id}>
                                                 <div>
                                                     <p className='my-3 text-xl font-bold text-blue-400'>Size</p>
-                                                    <select className='p-2 border-[1px] border-solid border-blue-400 text-blue-400 rounded-lg font-bold hover:opacity-80 mb-5 mr-2' {...register(`amount[${index}].size`)} placeholder='Size'>
-                                                        <option value="16">16</option>
-                                                        <option value="17">17</option>
-                                                        <option value="18">18</option>
+                                                    <select className='p-2 border-[1px] border-solid border-blue-400 text-blue-400 rounded-lg font-bold hover:opacity-80 mb-5 mr-2' {...register(`stock[${index}].size`)} placeholder='Size'>
+                                                        <option value="1">16</option>
+                                                        <option value="2">17</option>
+                                                        <option value="3">18</option>
                                                     </select>
                                                 </div>
                                                 <div>
                                                     <p className='my-3 text-xl font-bold text-blue-400'>Số lượng</p>
-                                                    <input className='p-2 border-[1px] border-solid border-blue-400 text-blue-400 rounded-lg font-bold hover:opacity-80 mr-2' type="text" {...register(`amount[${index}].quantity`)} placeholder='Quantity' />
+                                                    <input className='p-2 border-[1px] border-solid border-blue-400 text-blue-400 rounded-lg font-bold hover:opacity-80 mr-2' type="text" {...register(`stock[${index}].quantity`)} placeholder='Quantity' />
                                                 </div>
                                                 <p className="text-[#D2311B] mb-5 text-base font-medium h-5">
 
-                                                    {errors.amount?.[index]?.quantity?.message}
+                                                    {errors.stock?.[index]?.quantity?.message}
 
                                                 </p>
                                                 <div>
-                                                    <p className='my-3 text-xl font-bold text-blue-400'>Màu sắc</p>
-                                                    <div className='flex justify-around ml-4'>
-                                                        <div>
-                                                            <div className='inline-block w-[20px] h-[20px] bg-white border-[#333] mx-2 border-[1px] '></div>
-                                                            <input type="checkbox" {...register(`amount[${index}].color`)} value='white' />
-                                                        </div>
-                                                        <div>
-                                                            <div className='inline-block w-[20px] h-[20px] bg-gray-500 border-[#333] mx-2 border-[1px] '></div>
-                                                            <input type="checkbox" {...register(`amount[${index}].color`)} value='gray' />
-                                                        </div>
-                                                        <div>
-                                                            <div className='inline-block w-[20px] h-[20px] bg-yellow-300 border-[#333] mx-2 border-[1px] '></div>
-                                                            <input type="checkbox" {...register(`amount[${index}].color`)} value='gold' />
-                                                        </div>
-                                                    </div>
-                                                    <p className="text-[#D2311B] text-base font-medium h-5">
-
-                                                        {errors.amount?.[index]?.color?.message}
-
-                                                    </p>
-                                                </div>
-                                                <div>
                                                     <p className='my-3 text-xl font-bold text-blue-400'>Giá bán</p>
-                                                    <input className='p-2 border-[1px] border-solid border-blue-400 text-blue-400 rounded-lg font-bold hover:opacity-80 mr-2' type="number" onWheelCapture={e => { e.currentTarget.blur() }} {...register(`amount[${index}].cost`)} placeholder='Cost' />
+                                                    <input className='p-2 border-[1px] border-solid border-blue-400 text-blue-400 rounded-lg font-bold hover:opacity-80 mr-2' type="number" onWheelCapture={e => { e.currentTarget.blur() }} {...register(`stock[${index}].price`)} placeholder='Cost' />
                                                 </div>
                                                 <p className="text-[#D2311B] mb-5 text-base font-medium h-5">
 
-                                                    {errors.amount?.[index]?.cost?.message}
+                                                    {errors.stock?.[index]?.price?.message}
 
                                                 </p>
                                                 <button className='p-2 border-[1px] border-solid border-blue-400 text-blue-400 rounded-lg font-bold hover:opacity-80 mb-5' type='button' onClick={
@@ -400,7 +430,7 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
                                 }
                             </div>
                             <p className="text-[#D2311B] text-base font-medium h-5">
-                                {errors.amount?.message}
+                                {errors.stock?.message}
                             </p>
                         </div>
                         <div>
@@ -431,11 +461,11 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
                             className='p-2 border-[1px] border-solid border-blue-400 text-blue-400 rounded-lg font-bold hover:opacity-80 mb-5'
                             onClick={
                                 () => {
+                                    // data picture giu nguyen khi ma khong co anh xoa , dang trong trang thai edit va chua thay doi , neu khong thi luu data picture moi
                                     setValue("picture", (
                                         (idPic.length == 0 && currentPro.isEdit == true && changePic == false) ? currentPro.data.picture : [mainPicture, ...pictures]
                                     ))
                                     setValidate(validate + 1);
-                                    notify(currentPro.isEdit);
                                 }
                             }
                         >{currentPro.isEdit ? "Cập nhật" : "Thêm mới"}</button>

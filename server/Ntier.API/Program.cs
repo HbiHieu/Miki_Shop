@@ -28,8 +28,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 {
     opt.TokenValidationParameters = new TokenValidationParameters
     {
+        //khong su dung dich vu ngoai
         ValidateIssuer = false,
         ValidateAudience = false,
+        //validate key
         ValidateIssuerSigningKey = true ,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetConnectionString("SecretKey")))
     };

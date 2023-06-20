@@ -79,3 +79,5 @@ C:\coode\Miki_Shop\server\Ntier.API\obj\Debug\net6.0\Ntier.API.genruntimeconfig.
 C:\coode\Miki_Shop\server\Ntier.API\obj\Debug\net6.0\ref\Ntier.API.dll
 C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\System.Web.Cors.dll
+C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\CloudinaryDotNet.dll
+C:\coode\Miki_Shop\server\Ntier.API\bin\Debug\net6.0\Newtonsoft.Json.dll

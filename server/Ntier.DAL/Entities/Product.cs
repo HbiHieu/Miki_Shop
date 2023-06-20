@@ -8,20 +8,19 @@ namespace Ntier.DAL.Entities
         public Product()
         {
             ProductImages = new HashSet<ProductImage>();
+            ProductSizeDetails = new HashSet<ProductSizeDetail>();
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
         public string? Name { get; set; }
         public int? Sale { get; set; }
-        public int? Amount { get; set; }
         public string? Description { get; set; }
-        public int? Size { get; set; }
-        public string? Color { get; set; }
-        public int? Price { get; set; }
-        public int? Quantity { get; set; }
         public int? CategoryId { get; set; }
+        public DateTime? CreateAt { get; set; }
+        public int? MinPrice { get; set; }
 
         public virtual Category? Category { get; set; }
         public virtual ICollection<ProductImage> ProductImages { get; set; }
+        public virtual ICollection<ProductSizeDetail> ProductSizeDetails { get; set; }
     }
 }

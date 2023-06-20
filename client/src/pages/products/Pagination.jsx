@@ -27,7 +27,7 @@ function Pagination({ datas, pageCount, setPage }) {
                 nextLabel="next >"
                 onPageChange={handlePageClick}
                 pageRangeDisplayed={3}
-                pageCount={pageCount}
+                pageCount={2}
                 previousLabel="< previous"
                 renderOnZeroPageCount={null}
                 //className for CSS
