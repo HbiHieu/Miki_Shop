@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Ntier.BLL.Interfaces;
 using Ntier.DTO.DTO.Products;
+using Ntier.BLL.Attributes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ntier.API.Controllers
 {
@@ -43,6 +45,7 @@ namespace Ntier.API.Controllers
         }
 
         [HttpPost]
+        [AuthorizeRole("Admin")]
         public async Task<IActionResult> AddProductAsync( ProductToAddDTO productToAdd )
         {
             try
@@ -56,7 +59,23 @@ namespace Ntier.API.Controllers
             }
         }
 
+        [HttpPut("update")]
+        [AuthorizeRole("Admin")]
+        public async Task<IActionResult> UpdateProductAsync( ProductToAddDTO productToAdd )
+        {
+            try
+            {
+                await _productsService.UpdateProductAsync(productToAdd);
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpDelete("delete")]
+        [AuthorizeRole("Admin")]
         public async Task<IActionResult> DeleteProductAsync(string[] productsId )
         {
             try

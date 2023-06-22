@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -20,7 +21,7 @@ function Register(props) {
 
   })
   return (
-    <div className="overflow-hidden relative">
+    <div className="relative overflow-hidden">
       <div
 
         className="bg-bgm overflow-hidden w-[1440px] relative ">
@@ -38,12 +39,14 @@ function Register(props) {
             <img src="/assets/images/register.jpg" alt="register" />
           </div>
           <div>
-            <div className="absolute left-[67.52%] right-[7.39%] top-[6.57%] mb-[72px] ">
-              <img className="mx-auto" src="/assets/images/logo.png" alt="logo" />
-              <h2 className="uppercase font-playfair font-bold text-[40px] leading-[48px] text-neutral_1">
-                Miki jewelry
-              </h2>
-            </div>
+            <Link href="/">
+              <div className="absolute left-[67.52%] right-[7.39%] top-[6.57%] mb-[72px] cursor-pointer">
+                <img className="mx-auto" src="/assets/images/logo.png" alt="logo" />
+                <h2 className="uppercase font-playfair font-bold text-[40px] leading-[48px] text-neutral_1">
+                  Miki jewelry
+                </h2>
+              </div>
+            </Link>
 
             <RegisterForm />
 

@@ -28,7 +28,7 @@ namespace Ntier.BLL.Services
             _configuration = configuration;
         }
 
-        public async Task<ICollection<ImageDTO>> AddImageAsync( ICollection<ImageDTO> images )
+        public async Task AddImageAsync( ICollection<ImageDTO> images )
         {
             try
             {
@@ -45,8 +45,7 @@ namespace Ntier.BLL.Services
                     var uploadResult = await cloudinary.UploadAsync(uploadParams);
                     image.Url = uploadResult.Url.ToString();
                 }
-                var imgs = await _imageRepository.AddImagesAsync(_mapper.Map<ICollection<ProductImage>>(images));
-                return _mapper.Map<ICollection<ImageDTO>>(imgs);
+                await _imageRepository.AddImagesAsync(_mapper.Map<ICollection<ProductImage>>(images));
             }
             catch ( Exception ex )
             {
@@ -54,9 +53,9 @@ namespace Ntier.BLL.Services
             }
         }
 
-        public async Task DeleteImagesAsync(string[] productsId)
+        public async Task DeleteImagesAsync(ImageDTO[] imagesDto)
         {
-            await _imageRepository.DeleteImagesAsync(productsId);
+            await _imageRepository.DeleteImagesAsync(imagesDto);
         }
     }
 }

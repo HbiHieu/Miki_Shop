@@ -13,18 +13,9 @@ export default function CartItemsList({ items, setItemState }) {
     minimumFractionDigits: 0
   })
 
-  const [cart, setCart] = useRecoilState(cartState);
-
-  const handleDeleteCart = async (id) => {
-    const newCart = items.filter((item) => item._id != id);
+  const handleDeleteCart = (id) => {
+    const newCart = items.filter((item) => item.productId != id);
     setItemState(newCart);
-    const res = await axios({
-      method: 'POST',
-      url: '/api/cart/deleteCart',
-      data: { _id: id }
-    })
-    setCart(newCart?.length)
-    console.log(res)
   }
 
   return (
@@ -39,12 +30,11 @@ export default function CartItemsList({ items, setItemState }) {
             '
           >
             <div className='w-[136px] h-[136px] overflow-hidden mr-10'>
-              <img src={item?.productId?.picture?.[0]?.url} alt="img" className='object-cover object-center duration-200 hover:scale-125' />
+              <img src={item?.picture} alt="img" className='object-cover object-center duration-200 hover:scale-125' />
             </div>
             <div className=''>
-              <div className='text-xl font-bold'>{item?.productId?.name}</div>
+              <div className='text-xl font-bold'>{item?.name}</div>
               <div className='text-sm text-[#707070] mt-2l;l;l;l;l;'>{`Kích cỡ :${item.size}`}</div>
-              <div className='text-sm text-[#707070] mt-2 mb-11'>{`Màu sắc :${item.color}`}</div>
               <AddAndRemoveItems
                 product={item}
                 index={index}
@@ -57,7 +47,7 @@ export default function CartItemsList({ items, setItemState }) {
                 <span
                   className='flex items-center justify-center w-8 h-8 rounded-full hover:bg-neutral_1 hover:text-white hover:cursor-pointer'
                   onClick={() => {
-                    handleDeleteCart(item._id)
+                    handleDeleteCart(item.productId);
                   }}
                 >
                   <IconXX

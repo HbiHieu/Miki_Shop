@@ -1,42 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import CartNav from 'src/sections/cart/CartNav';
-import { useRecoilValue } from 'recoil';
 import CartItemsList from './CartItemsList';
 import CartCalculation from './CartCalculation';
-import { dataUser } from 'src/recoils/dataUser';
 import Link from 'next/link';
-import { axiosClient } from 'src/utils/axios';
+import { cartState } from 'src/recoils/cartState';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { dataUser } from 'src/recoils/dataUser';
 
 export default function CartMain() {
-  const [cartItem, setCartItem] = useState([]);
+  const [cartItem, setCartItem] = useRecoilState(cartState);
   const [isSsr, setIsSsr] = useState(true);
+  const user = useRecoilValue(dataUser);
   const totalCost = cartItem?.reduce((total, product) => {
     return total + product.quantity * product.cost;
   }, 0);
 
-  const user = useRecoilValue(dataUser);
-
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await axiosClient({
-        method: 'GET',
-        url: 'https://localhost:7226/api/Users',
-      });
-      console.log(data);
-      setCartItem(data?.data);
-    };
-
-    // call the function
-    fetchData()
-      // make sure to catch any error
-      .catch(console.error);
     setIsSsr(false);
   }, []);
 
   return !isSsr ? (
     <div className="container mt-[35px] bg-white mb-[140px]">
       <CartNav />
-      {cartItem.length != 0 ? (
+      {cartItem.length != 0 && user ? (
         <div className="flex justify-between">
           <CartItemsList items={cartItem} setItemState={setCartItem} />
           <CartCalculation total={totalCost} />

@@ -22,8 +22,7 @@ function SortProductsAd(props) {
           }
         }
       >
-        <option value="--Hành Động--">--Sắp xếp theo--</option>
-        <option className='p-6 ml-2' value="">Mặc định</option>
+        <option className='p-6 ml-2'>Mặc định</option>
         <option className='p-6 ml-2' value="name&order=asc">A-Z</option>
         <option className='p-6 ml-2' value="name&order=desc">Z-A</option>
         <option className='p-6 ml-2' value="price&order=asc">Giá tăng dần</option>

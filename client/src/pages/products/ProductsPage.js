@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -26,7 +25,7 @@ function ProductsPage(props) {
     dataProducts();
   }, [page, sort]);
 
-  const dataProducts = async (data) => {
+  const dataProducts = (data) => {
     try {
       const res = axios({
         method: 'GET',
@@ -34,14 +33,12 @@ function ProductsPage(props) {
         url: `https://localhost:7226/api/Products?page=${page}&sortBy=${sort}`,
       });
       res.then((response) => {
-        // const datas = respon.data;
-        // const { data, pagination } = datas;
-        // const { _page, _limit, _totalProducts } = pagination;
-        // const list = respon;
+        const datas = response.data;
+        const { data, pagination } = datas;
+        const { _page, _limit, _totalRows } = pagination;
         console.log(response);
-        setSortList(response.data); //Get list of products
-        //setPagination(pagination);
-        //setPageCount(Math.ceil(_totalProducts / _limit));
+        setSortList(data); //Get list of products
+        setPageCount(Math.ceil(_totalRows / _limit));
       });
     } catch (err) {
       console.log('Call API Error');

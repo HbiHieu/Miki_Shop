@@ -6,6 +6,7 @@ import AddForm from './addForm';
 import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import SortProductsAd from './SortProductsAd';
+import { axiosClient } from 'src/utils/axios';
 
 Product.getLayout = (page) => <MainAdLayout>{page}</MainAdLayout>;
 
@@ -40,12 +41,14 @@ export default function Product() {
     const handleApplyOptions = async () => {
         if (option == 'Xóa') {
             try {
-                const resDeleteImages = await axios({
+                const imagesToDelete = currentProductPage.map((item) => item.pictures.filter(picture => checkPro.includes(picture.productId))).flat();
+                console.log(imagesToDelete)
+                await axiosClient({
                     method: 'DELETE',
                     url: 'https://localhost:7226/api/Images/delete',
-                    data: checkPro,
+                    data: imagesToDelete,
                 });
-                const resDeleteProduct = await axios({
+                const resDeleteProduct = await axiosClient({
                     method: 'DELETE',
                     url: 'https://localhost:7226/api/Products/delete',
                     data: checkPro,
@@ -93,7 +96,7 @@ export default function Product() {
     }
 
     // state of Sort 
-    const [sort, setSort] = useState('');
+    const [sort, setSort] = useState('name&order=asc');
 
     useEffect(() => {
         // declare the data fetching function
@@ -102,20 +105,22 @@ export default function Product() {
                 method: 'GET',
                 url: `https://localhost:7226/api/Products?page=${page}&sortBy=${sort}`,
             });
-            console.log(res);
-            //const { data, pagination } = datas;
-            //const { _page, _limit, _totalProducts } = pagination;
+            const { data, pagination } = res.data;
+            const { _page, _limit, _totalRows } = pagination;
             //setPagination(pagination);
             //số trang
-            //setPageCount(Math.ceil(_totalProducts / _limit)); 
+            setPageCount(Math.ceil(_totalRows / _limit));
             //setProducts(products);
-            setCurrentProductPage(res.data);
+            res.data.data.forEach(product => {
+                product.pictures.sort((a, b) => { return a.index - b.index });
+            });
+            setCurrentProductPage(data);
         }
         // call the function
         fetchData()
             // make sure to catch any error
             .catch(console.error);
-    }, [page, sort])
+    }, [page, sort, update])
 
     const tableToolbar = [
         {
@@ -274,7 +279,7 @@ export default function Product() {
                     onPageActive={handleActivePage}
                     activeLinkClassName='active'
                     pageRangeDisplayed={3}
-                    pageCount={2}
+                    pageCount={pageCount}
                     pageClassName='pageLi'
                     previousLabel="< previous"
                     renderOnZeroPageCount={null}

@@ -68,7 +68,7 @@ namespace Ntier.BLL.Services
                     Id = user.Id,
                     Email = user.Email,
                     Access_token = jwtToken,
-                    Expire_At = DateTime.UtcNow.AddSeconds(30),
+                    Expire_At = DateTime.UtcNow.AddMinutes(10),
                     Name = user.Name,
                     Refresh_Token = refreshTk,
                     Role = user.Role ,
@@ -126,7 +126,7 @@ namespace Ntier.BLL.Services
                 if (refreshTk.ExpireAt < DateTime.UtcNow)
                 {
 
-                    await _userRepository.RemoveAccessTokenAsync(userId);
+                    await _userRepository.RemoveRefreshTokenAsync(userId);
                     throw new ArgumentException("Refresh token was expired");
                 }
                 else

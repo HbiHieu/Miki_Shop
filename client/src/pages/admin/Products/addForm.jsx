@@ -5,8 +5,9 @@ import * as yup from 'yup';
 import axios from 'axios';
 import Page from 'src/components/Page';
 import { toast } from 'react-toastify';
-import uniqid from 'uniqid';
 import 'react-toastify/dist/ReactToastify.css';
+import { axiosClient } from 'src/utils/axios';
+import { convertProductToRequest } from 'src/utils/convertProductToRequest';
 
 
 const stockSchema = yup.object().shape({
@@ -51,14 +52,12 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
             name: "stock",
         },
     );
-
     //handle of picture 
+    //sap xep anh lan luot theo thu tu index
     const [mainPicture, setMainPicture] = useState(currentPro.data.pictures?.[0] || '');
     const [pictures, setPictures] = useState(currentPro.data.pictures?.filter((picture, index) => {
         return index !== 0;
     }) || []);
-    console.log(mainPicture);
-    console.log('sub pic is', pictures);
 
     // id anh de xoa
     const [idPic, setIdPic] = useState([]);
@@ -69,110 +68,120 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
     const [validate, setValidate] = useState(0);
 
     useEffect(() => {
-        size_field.length > 0 && clearErrors('stock')
+        size_field.length > 0 && clearErrors('stock');
     }, [size_field])
 
+    useEffect(() => {
+        if (currentPro.data.stocks) {
+            currentPro.data.stocks.forEach((item, index) => {
+                setValue(`stock[${index}].size`, item.sizeId);
+            })
+        }
+    }, [])
+
     console.log(currentPro);
+    console.log(idPic);
 
     const onSubmit = async (data) => {
-        console.log('Data is..', data)
         try {
             if (currentPro.isEdit) {
-                // Xoa anh da upload truoc do khi submit 
-                if (idPic.filter((id) => id != undefined).length != 0) {
-                    // goi api xoa anh o sever
-                    // const resDelte = await axios({
-                    //     method: 'POST',
-                    //     url: '/api/image/delete',
-                    //     data: { files: idPic }
-                    // });
-                    console.log('Resdata is...', resDelte.data);
-                }
-                // neu ma la edit 
-                console.log('Data is', { ...data, id: currentPro.data._id });
-                //upload anh chinh 
-                var mainpic = mainPicture
-                // kiem tra xem anh chinh co bi sua khong 
-                if (typeof mainpic == 'string') {
-                    const resPic = await axios({
-                        method: 'POST',
-                        url: '/api/image/upload',
-                        data: { file: mainpic }
+                //Xoa anh da upload truoc do khi submit 
+                if (idPic.length != 0) {
+                    const IndexImagesToDelete = idPic.filter(indexPicture => {
+                        const picture = currentPro.data.pictures.find(picture => picture.index == indexPicture);
+                        return picture ? picture : false;
                     })
-                    mainpic = resPic?.data;
+                    const imagesToDelete = IndexImagesToDelete.map(index => {
+                        return {
+                            productId: currentPro.data.id,
+                            index: index,
+                        }
+                    });
+                    if (imagesToDelete.length != 0) {
+                        await axiosClient({
+                            method: 'DELETE',
+                            url: 'https://localhost:7226/api/Images/delete',
+                            data: imagesToDelete,
+                        });
+                        setIdPic([]);
+                    }
+                    // goi api xoa anh o sever
+                }
+                //upload anh chinh 
+                // kiem tra xem anh chinh co bi sua khong 
+                if (typeof mainPicture == 'string') {
+                    const resPic = await axiosClient({
+                        method: 'POST',
+                        url: 'https://localhost:7226/api/Images',
+                        data: [{
+                            url: mainPicture,
+                            productId: currentPro.data.id,
+                            index: 0,
+                        }],
+                    });
                 }
 
-                // loc ra nhung anh da day len sever va chua day len sever
-                const picCvCloud = pictures.filter((pic) => typeof pic == 'object');
-                const picNoneCvCloud = pictures.filter((pic) => typeof pic == 'string');
+                // // loc ra nhung anh da day len sever va chua day len sever
 
-                //upload nhung anh chua day len sever
-                const resPic = await axios({
-                    method: 'POST',
-                    url: '/api/image/upload',
-                    data: { files: picNoneCvCloud }
-                });
-                console.log(picCvCloud, picNoneCvCloud);
-                console.log(resPic?.data?.result);
-                //setPictures([...picCvCloud, ...resPic?.data?.result]);
-                const resData = await axios({
-                    method: 'POST',
-                    url: '/api/products/update',
-                    data: { ...data, picture: [mainpic, ...picCvCloud, ...resPic?.data?.result], id: currentPro.data._id }
-                });
-                setUpdate((prev) => !prev);
-            } else {
-                // console.log('Data add is..', data);
-                //tao moi product
-                const minPrice = data.stock[0].price;
-                const stock = data.stock.map((item) => {
-                    if (item.price < minPrice) minPrice = item.price;
-                    return {
-                        sizeId: parseInt(item.size),
-                        quantity: parseInt(item.quantity),
-                        price: item.price
+                const havePictureNoneConvert = pictures.filter(picture => {
+                    if (typeof picture == 'string') {
+                        return picture;
+                    }
+                    else {
+                        return false;
                     }
                 });
-                const productId = uniqid();
-                const productToAdd = {
-                    id: productId,
-                    name: data.name,
-                    categoryId: parseInt(data.category),
-                    stock: stock,
-                    sale: data.sale,
-                    desc: data.desc,
-                    minPrice,
-                }
-                const resData = await axios({
+                const picNoneConvertedIntoCloud = havePictureNoneConvert.map((picture, index) => {
+                    return { url: picture, productId: currentPro.data.id, index: index + 1 };
+                });
+
+                // //upload nhung anh chua day len sever
+                const resPic = await axiosClient({
+                    method: 'POST',
+                    url: 'https://localhost:7226/api/Images',
+                    data: picNoneConvertedIntoCloud,
+                });
+                console.log(picNoneConvertedIntoCloud);
+                // update product
+                const product = convertProductToRequest(data, currentPro.data.id);
+                const resData = await axiosClient({
+                    method: 'PUT',
+                    url: 'https://localhost:7226/api/Products/update',
+                    data: product,
+                });
+                console.log(product);
+                setUpdate((prev) => !prev);
+            } else {
+                const product = convertProductToRequest(data, currentPro.data.id);
+                const resData = await axiosClient({
                     method: 'POST',
                     url: 'https://localhost:7226/api/Products',
-                    data: productToAdd,
+                    data: product,
                 })
                 console.log(resData);
                 // //neu la them moi
                 const images = [mainPicture, ...pictures].map((item, index) => {
                     return {
                         url: item,
-                        productId,
+                        productId: product.id,
                         index,
                     }
                 });
                 console.log(images);
-                const resPic = await axios({
+                const resPic = await axiosClient({
                     method: 'POST',
                     url: 'https://localhost:7226/api/Images',
                     data: images,
                     // data la anh o dang base 64
                 });
-                console.log(resPic);
                 // anh cloudiary
                 // setProducts((prev) => {
                 //         return [...prev, resData.data];
                 //     })
                 setUpdate((prev) => !prev);
-                //setMainPicture('');
-                //setPictures([]);
-                //reset()
+                setMainPicture('');
+                setPictures([]);
+                reset()
             }
             notify(currentPro.isEdit);
         }
@@ -193,7 +202,6 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
                 setMainPicture(picMainConvertB64);
             }
             else {
-
                 const picConvertB64 = reader.result
                 // console.log('PicSubConvertBase64 is ', picConvertB64);
                 setPictures(
@@ -210,13 +218,29 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
     //xoa anh chinh dua id da xoa vao 1 mang 
     //anh chua dc upload len sever se khong co id => xoa khong goi api , chi la thao tac tren client
     const handleDeleteMain = () => {
-        (idPic.includes(currentPro.data.picture?.[0]?._id) ? null : setIdPic((prev) => [...prev, currentPro.data.picture?.[0]._id]))
-        console.log(idPic);
+        (idPic.includes(0) ? null : setIdPic((prev) => [...prev, 0]))
         setMainPicture([]);
+    }
+
+    //xoa anh phu , dua index cua anh vao 1 mang 
+    const handleDelete = (indexDelete, isConvertedPicture) => {
+        (idPic.includes(indexDelete) ? null : setIdPic((prev) => [...prev, indexDelete]));
+        setPictures((prev) => {
+            const newListPic = prev.filter((picture, index) => {
+                if (isConvertedPicture) {
+                    return picture.index != indexDelete
+                }
+                else {
+                    return index !== indexDelete - 1;
+                }
+            });
+            return newListPic;
+        })
     }
 
     //thay doi anh chinh
     const handleChangeMainPicture = (link) => {
+        (idPic.includes(0) ? null : setIdPic((prev) => [...prev, 0]))
         getBase64(link, 'main');
     }
 
@@ -226,18 +250,6 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
         getBase64(file, 'sub');
         e.target.value = null;
     }
-
-    //xoa anh phu , dua id vao 1 mang 
-    const handleDelete = (indexDelete) => {
-        (idPic.includes(currentPro.data.picture?.[indexDelete + 1]?._id) ? null : setIdPic((prev) => [...prev, currentPro.data.picture?.[indexDelete + 1]?._id]));
-        setPictures((prev) => {
-            const newListPic = prev.filter((picture, index) => {
-                return index !== indexDelete;
-            });
-            return newListPic;
-        })
-    }
-
 
     const notify = (edit) => {
         (
@@ -356,7 +368,12 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
                                                 className='mt-2 text-center text-blue-500 cursor-pointer hover:opacity-60'
                                                 onClick={
                                                     () => {
-                                                        handleDelete(index)
+                                                        if (picture.index) {
+                                                            handleDelete(picture.index, 1)
+                                                        }
+                                                        else {
+                                                            handleDelete(index + 1, 0);
+                                                        }
                                                     }
                                                 }
                                             >Xóa</div>

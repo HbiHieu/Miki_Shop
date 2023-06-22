@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 // import { Visa, Debit, Paypal } from 'src/components/icons';
-import { Visa, Debit , Paypal } from 'src/components/icons';
+import { Visa, Debit, Paypal } from 'src/components/icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
@@ -51,9 +51,11 @@ export default function Checkout() {
 
   const [orderPro, setOrderPro] = useState(useRecoilValue(cartState));
   const [payCard, setPayCard] = useState();
-  const [total , setTotal] = useState( () => orderPro.reduce((total, product) => {
-    return total + product.quantity * product.cost;
-  }, 0) )
+  const [total, setTotal] = useState(() =>
+    orderPro.reduce((total, product) => {
+      return total + product.quantity * product.cost;
+    }, 0),
+  );
 
   const handleAddProduct = (indexofPro, method) => {
     setOrderPro((prev) =>
@@ -66,9 +68,11 @@ export default function Checkout() {
         return pro;
       }),
     );
-    setTotal(() => orderPro.reduce((total, product) => {
-      return total + product.quantity * product.cost;
-    }, 0))
+    setTotal(() =>
+      orderPro.reduce((total, product) => {
+        return total + product.quantity * product.cost;
+      }, 0),
+    );
   };
 
   // const totalCost = selector({
@@ -81,7 +85,7 @@ export default function Checkout() {
   //   },
   // });
 
- // const total = useRecoilValue(totalCost);
+  // const total = useRecoilValue(totalCost);
 
   const [isSSR, setIsSSR] = useState(true);
 
@@ -364,12 +368,12 @@ export default function Checkout() {
                 </button>
                 <Link href={'/cart'}>
                   <a>
-                  <button
-                  type="button"
-                  className="py-2 px-[46px] border-[1px] border-btn rounded-lg hover:bg-btn text-btn hover:text-neutral_5 font-bold"
-                >
-                  Trở lại giỏ hàng
-                </button>
+                    <button
+                      type="button"
+                      className="py-2 px-[46px] border-[1px] border-btn rounded-lg hover:bg-btn text-btn hover:text-neutral_5 font-bold"
+                    >
+                      Trở lại giỏ hàng
+                    </button>
                   </a>
                 </Link>
               </div>
@@ -378,7 +382,7 @@ export default function Checkout() {
               {orderPro?.map((product, index) => (
                 <div key={index} className="flex justify-between mt-[40px] mx-[57px]">
                   <div className="flex">
-                    <img src={product?.img?.url} className="w-[56px] h-[56px] round-2" />
+                    <img src={product?.picture} className="w-[56px] h-[56px] round-2" />
                     <p className="ml-4 font-bold">{product.name}</p>
                   </div>
                   <div>
@@ -409,7 +413,7 @@ export default function Checkout() {
               <div className="flex justify-between items-center mt-[35px] mx-[57px]">
                 <p>Giá sản phẩm</p>
                 <p className="text-[20px] leading-[28px] font-bold">{`${convertNumberToStringMoney(
-                total,
+                  total,
                 )}đ`}</p>
               </div>
               <div className="flex justify-between items-center mt-[20px] mx-[57px]">

@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import { useRef } from 'react';
 
 import Button from 'src/components/Button';
 
 export default function Datas(props) {
   const { data } = props;
+  const ref = useRef();
 
   const formatter = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
@@ -29,12 +31,13 @@ export default function Datas(props) {
                       {product.name}
                     </h5>
                     <h5 className="absolute bottom-[56px] left-0 right-0 text-center font-main font-bold text-xl tracking-[0.019rem] text-primary_2">
-                      {formatter.format((product.stocks[0].price))}
+                      {formatter.format((product?.stocks?.[0]?.price))}
                     </h5>
                   </a>
                 </Link>
                 <Link href={`/products/${product.id}`}>
                   <Button
+                    ref={ref}
                     title="Thêm vào giỏ hàng"
                     className="font-bold text-base tracking-[0.15px] text-center text-white 
                 bg-[#251C17]

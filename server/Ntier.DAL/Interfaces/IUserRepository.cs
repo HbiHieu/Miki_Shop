@@ -18,7 +18,7 @@ namespace Ntier.DAL.Interfaces
         Task<User?> CheckUserAsync( UserLoginDTO userLoginDTO );
 
         Task AddRefreshTokenAsync(RefreshToken refreshToken);
-        Task RemoveAccessTokenAsync(string userId); 
+        Task RemoveRefreshTokenAsync(string userId); 
 
         Task<RefreshToken> GetRefreshTokenAsync(string userId);
     }

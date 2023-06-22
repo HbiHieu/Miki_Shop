@@ -64,7 +64,10 @@ namespace Ntier.API.Controllers
             try
             {
                 string jwt = await _userService.GetNewAccessTokenAsync(userId);
-                return Ok(jwt);
+                return Ok( new { 
+                    jwt = jwt ,
+                    expire_at = DateTime.UtcNow.AddMinutes(10),
+                } );
             }
             catch (Exception ex)
             {

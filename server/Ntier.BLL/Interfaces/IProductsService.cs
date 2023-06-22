@@ -12,7 +12,8 @@ namespace Ntier.BLL.Interfaces
     {
         public Task<ProductDTO> GetProductByIdAsync(string id);
         public Task AddProductAsync(ProductToAddDTO productToAdd);
-        public Task<ICollection<ProductDTO>?> GetProductsAsync( ProductQueryParameters queryParameters );
+        public Task UpdateProductAsync(ProductToAddDTO productToAdd);
+        public Task<ProductsPagination> GetProductsAsync( ProductQueryParameters queryParameters );
         public Task DeleteProductsAsync(string[] productsId);
     }
 }

@@ -34,6 +34,11 @@ namespace Ntier.BLL.Services
             }
         }
 
+        public async Task UpdateProductAsync(ProductToAddDTO productToAdd )
+        {
+            await _productsRepository.UpdateProductAsync(productToAdd);
+        }
+
         public async Task<ProductDTO> GetProductByIdAsync(string id)
         {
             try
@@ -57,7 +62,7 @@ namespace Ntier.BLL.Services
             }
         }
 
-        public async Task<ICollection<ProductDTO>?> GetProductsAsync( ProductQueryParameters queryParameters )
+        public async Task<ProductsPagination> GetProductsAsync( ProductQueryParameters queryParameters )
         {
             try
             {
@@ -72,10 +77,21 @@ namespace Ntier.BLL.Services
                         sale = product.Sale,
                         desc = product.Description,
                         stocks = _mapper.Map<ICollection<StockDTO>>(product.ProductSizeDetails),
-                        pictures = _mapper.Map<ICollection<ImageDTO>>(product.ProductImages)
-                    }) ;
+                        pictures = _mapper.Map<ICollection<ImageDTO>>(product.ProductImages),
+                    }); ;
                 }
-                return productDTOs;
+                var totalRow = await _productsRepository.GetQuantityProducts();
+                ProductsPagination productsPagination = new ProductsPagination
+                {
+                    data = productDTOs ,
+                    pagination = new Pagination
+                    {
+                        _page = queryParameters.page,
+                        _limit = 4,
+                        _totalRows = totalRow 
+                    }
+                };
+                return productsPagination;
             }
             catch (Exception ex)
             {

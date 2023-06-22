@@ -15,16 +15,18 @@ axiosClient.interceptors.request.use(async (config) => {
   if (accessToken) {
     const utcStr = new Date().toUTCString();
     const timeNow = Date.parse(utcStr);
-    const user = JSON.parse(localStorage.getItem('user'));
-    const expireTime = Date.parse(user.accessExpire);
+    const expire = localStorage.getItem('expire_at');
+    const expireTime = Date.parse(expire);
+    const userId = localStorage.getItem('userId');
     if (expireTime < timeNow) {
       try {
         const newAccessToken = await axios({
           method: 'POST',
-          url: `https://localhost:7226/api/Users/refreshToken?userId=${user.userInforId}`,
+          url: `https://localhost:7226/api/Users/refreshToken?userId=${userId}`,
         });
-        localStorage.setItem('accessToken', newAccessToken.data);
-        accessToken = newAccessToken.data;
+        localStorage.setItem('accessToken', newAccessToken.data.jwt);
+        accessToken = newAccessToken.data.jwt;
+        localStorage.setItem('expire_at', newAccessToken.data.expire_at);
       } catch (e) {
         if ((e.response.data = 'Refresh token was expired')) {
           localStorage.clear();

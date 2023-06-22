@@ -7,7 +7,7 @@ export const Decoration = ({ className, width, height }) => (
     viewBox="0 0 504 551"
     fill="none"
   >
-    <circle cx="228.5" cy="275.5" r="275.5" fill="#B78D71" fill-opacity="0.15" />
-    <circle cx="228.5" cy="275.5" r="220.453" fill="#B78D71" fill-opacity="0.1" />
+    <circle cx="228.5" cy="275.5" r="275.5" fill="#B78D71" fillOpacity="0.15" />
+    <circle cx="228.5" cy="275.5" r="220.453" fill="#B78D71" fillOpacity="0.1" />
   </svg>
 );

@@ -12,9 +12,13 @@ export default function MainAdLayout({ children }) {
         (<div className='grid grid-cols-12'>
             <div className="col-span-2 bg-[#345ccd] text-[#fff] text-start w-[225px] p-5 fixed top-0 bottom-0">
                 <ul>
-                    <li className='py-4 font-bold text-center'>
-                        ADMIN<sup>Shop</sup>
-                    </li>
+                    <Link href={'/'}>
+                        <a>
+                            <li className='py-4 font-bold text-center'>
+                                ADMIN<sup>Shop</sup>
+                            </li>
+                        </a>
+                    </Link>
                     <li className='py-3 border-y-[1px] border-solid border-[#5f84ec] font-bold'>Bảng điều khiển</li>
                     <li>
                         <p className='my-3 font-bold text-[#5f84ec]'>CHÍNH</p>

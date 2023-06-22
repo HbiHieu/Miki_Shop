@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { FbLogin, GoogleIcon, LogoIconLogin } from 'src/components/icons';
 import * as yup from 'yup';
+import axios from 'axios';
 
 //jwt-decode (để decode jwt token của bạn)
 import { axiosClient } from 'src/utils/axios';
@@ -33,7 +34,7 @@ export default function LoginFormSection() {
   });
 
   const onSubmit = async (data) => {
-    const res = axiosClient({
+    const res = axios({
       method: 'POST',
       url: 'https://localhost:7226/api/Users/login',
       data: data,
@@ -54,7 +55,8 @@ export default function LoginFormSection() {
       setUser(user);
       const accessToken = dataUser.access_token;
       localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('expire_at', user.accessExpire.toString());
+      localStorage.setItem('userId', user.userInforId);
     });
   };
 
@@ -68,8 +70,8 @@ export default function LoginFormSection() {
         viewBox="0 0 529 151"
         fill="none"
       >
-        <circle cx="275.5" cy="275.5" r="275.5" fill="#B78D71" fill-opacity="0.15" />
-        <circle cx="275.5" cy="275.5" r="220.453" fill="#B78D71" fill-opacity="0.1" />
+        <circle cx="275.5" cy="275.5" r="275.5" fill="#B78D71" fillOpacity="0.15" />
+        <circle cx="275.5" cy="275.5" r="220.453" fill="#B78D71" fillOpacity="0.1" />
       </svg>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -99,10 +101,12 @@ export default function LoginFormSection() {
         </div>
         <div>
           <div className="w-[490px]">
-            <div className="mt-[56px] h-[160px]">
-              <LogoIconLogin />
-              <h1 className="logo ml-[102px]">MIKI JEWELRY</h1>
-            </div>
+            <Link href={"/"}>
+              <div className="mt-[56px] h-[160px] cursor-pointer">
+                <LogoIconLogin />
+                <h1 className="logo ml-[102px]">MIKI JEWELRY</h1>
+              </div>
+            </Link>
             <div className="mx-[40px]">
               <h1 className="h1Login">Đăng nhập</h1>
               <form onSubmit={handleSubmit(onSubmit)}>

@@ -104,7 +104,9 @@ export function Header() {
                </Link>
                <Link href="/">
                   <li className="flex items-center group">
-                     <a className="relative ml-[50px] font-medium cursor-pointer">Sản phẩm</a>
+                     <Link href="/products">
+                        <a className="relative ml-[50px] font-medium cursor-pointer">Sản phẩm</a>
+                     </Link>
                      <IconDown className="ml-[14px] mt-[1px] cursor-pointer" />
                      <div className="absolute top-[10px] left-0 w-[1136px] h-[186px] mt-[40px] z-20 bg-bgm justify-evenly font-medium leading-[24px] hidden group-hover:flex animate-growth origin-[20%_2%] pseudoDropdown hover:flex">
                         <ul className="w-[254px] text-center h-[186px]">
@@ -138,12 +140,21 @@ export function Header() {
                      </div>
                   </li>
                </Link>
-
-               <Link href="/">
-                  <li>
-                     <a className="ml-[40px] font-medium cursor-pointer">Về chúng tôi</a>
-                  </li>
-               </Link>
+               <li className='relative group'>
+                  <a className="ml-[40px] font-medium cursor-pointer">Về chúng tôi</a>
+                  <ul className='absolute ml-[40px] hidden group-hover:block animate-growth origin-[20%_2%] pseudoDropdown z-50 bg-bgm w-[250px] shadow-xl p-3 rounded-md'>
+                     <Link href={"/about"}>
+                        <a>
+                           <li className='p-3 hover:font-medium hover:text-primary_3 hover:cursor-pointer'>Thương hiệu và lịch sử</li>
+                        </a>
+                     </Link>
+                     <Link href={"/tuyendung"}>
+                        <a>
+                           <li className='p-3 hover:font-medium hover:text-primary_3 hover:cursor-pointer'>Tuyển dụng</li>
+                        </a>
+                     </Link>
+                  </ul>
+               </li>
             </ul>
             <div className="mt-[16px]">
                <LogoIcon />
@@ -185,7 +196,7 @@ export function Header() {
                            </a>
                         </Link>
                         {!isSSR ?
-                           <div className={`${cart != 0 ? 'visible' : 'invisible'} relative left-[-14px] rounded-full px-[0.3125rem] text-center h-6 border-solid border-neutral_1 text-white bg-red-400 mr-[-0.875rem] leading-6 min-w-[24px] w-auto top-[-9px]`}>{cart}</div>
+                           <div className={`${cart.length != 0 && user ? 'visible' : 'invisible'} relative left-[-14px] rounded-full px-[0.3125rem] text-center h-6 border-solid border-neutral_1 text-white bg-red-400 mr-[-0.875rem] leading-6 min-w-[24px] w-auto top-[-9px]`}>{cart.length}</div>
                            : null
                         }
                      </>
@@ -200,7 +211,7 @@ export function Header() {
                            <ul className='shadow-xl cursor-pointer bg-primary_5'>
                               <li
                                  onClick={() => {
-                                    router.push(user.role == "Admin" ? "/admin" : "/profile");
+                                    router.push(user ? (user.role == "Admin" ? "/admin" : "/profile") : "/login");
                                  }}
                                  className='w-[200px]  text-left px-3 py-2 leading-7 text-base hover:bg-primary_2 hover:text-white font-bold'>
                                  <span className='flex items-center justify-start'>

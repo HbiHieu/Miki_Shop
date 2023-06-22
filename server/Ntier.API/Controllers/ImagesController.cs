@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Ntier.BLL.Attributes;
 using Ntier.BLL.Interfaces;
 using Ntier.DTO.DTO.Products;
 using static System.Net.Mime.MediaTypeNames;
@@ -16,14 +17,14 @@ namespace Ntier.API.Controllers
         }
 
         [HttpPost]
+        [AuthorizeRole("Admin")]
         public async Task<IActionResult> AddImagesAsync( ICollection<ImageDTO> images )
         {
             try
             {
-            var imgs = await _imageService.AddImageAsync(images);
+                await _imageService.AddImageAsync(images);
                 return Ok(new {
                     message = "Create image succecfully",
-                    data = imgs,
                 });
             }
             catch ( Exception ex )
@@ -33,11 +34,12 @@ namespace Ntier.API.Controllers
         }
 
         [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteImagesAsync( string[] productsId )
-        {
+        [AuthorizeRole("Admin")]
+        public async Task<IActionResult> DeleteImagesAsync( ImageDTO[] imagesDto )
+        {   
             try
             {
-                await _imageService.DeleteImagesAsync( productsId );
+                await _imageService.DeleteImagesAsync( imagesDto );
                 return Ok(new
                 {
                     message = "Delete image succecfully",

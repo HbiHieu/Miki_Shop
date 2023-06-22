@@ -1,4 +1,5 @@
 ﻿using Ntier.DAL.Entities;
+using Ntier.DTO.DTO.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Ntier.DAL.Interfaces
 {
     public interface IImageRepository
     {
-        public Task<ICollection<ProductImage>> AddImagesAsync(ICollection<ProductImage> images);
-        public Task DeleteImagesAsync(string[] productsId);
+        public Task AddImagesAsync(ICollection<ProductImage> images);
+        public Task DeleteImagesAsync( ImageDTO[] imagesDto);
     }
 }

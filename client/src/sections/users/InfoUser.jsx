@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Button from 'src/components/Button';
 import ProfileForm from '../auth/ProfileForm';
+import { useRecoilValue } from 'recoil';
+import { dataUser } from 'src/recoils/dataUser';
 
 function InfoUser() {
     const [isOpen, setIsOpen] = useState(false);
 
-    const user = JSON.parse(localStorage.getItem('user'))
-
-    console.log(user);
+    const user = useRecoilValue(dataUser);
 
     const toggle = () => {
         setIsOpen(!isOpen);
@@ -26,13 +26,13 @@ function InfoUser() {
                         </h3>
                     </div>
                     <div className='flex gap-10 pb-10'>
-                        <div className='flex-1 align text-right text-black font-bold'>
+                        <div className='flex-1 font-bold text-right text-black align'>
                             <p className='pb-12'>Họ và tên</p>
                             <p className='pb-12'>Giới tính</p>
                             <p className=''>Ngày sinh</p>
                         </div>
                         <div className='flex-[2_2_0%] align text-left text-black font-medium'>
-                            <p className='pb-12'>{user?.firstName + ' ' + user?.lastName}</p>
+                            <p className='pb-12'>{user?.firstName}</p>
                             <div className='flex pb-12'>
                                 <div className='flex'>
                                     <input id='feMale' className='w-6 radio-sex ' name="fav_language" type='radio' value='Nữ' />
@@ -63,7 +63,7 @@ function InfoUser() {
                         </h3>
                     </div>
                     <div className='flex gap-10 pb-10'>
-                        <div className='flex-1 align text-right text-black font-bold'>
+                        <div className='flex-1 font-bold text-right text-black align'>
                             <p className='pb-12'>Số điện thoại</p>
                             <p className='pb-12'>Email</p>
                             <p className=''>Mật khẩu</p>
@@ -72,7 +72,7 @@ function InfoUser() {
                             <p className='pb-12'>0912345678</p>
                             <p className='pb-12'>{user?.email}</p>
 
-                            <p>123!@#$%</p>
+                            <p>********</p>
                         </div>
                     </div>
 

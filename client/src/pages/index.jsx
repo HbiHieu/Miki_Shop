@@ -35,8 +35,8 @@ export default function HomePage() {
         viewBox="0 0 111 387"
         fill="none"
       >
-        <circle cx="275.5" cy="275.5" r="275.5" fill="#B78D71" fill-opacity="0.15" />
-        <circle cx="275.5" cy="275.5" r="220.453" fill="#B78D71" fill-opacity="0.1" />
+        <circle cx="275.5" cy="275.5" r="275.5" fill="#B78D71" fillOpacity="0.15" />
+        <circle cx="275.5" cy="275.5" r="220.453" fill="#B78D71" fillOpacity="0.1" />
       </svg>
     </div>
   );

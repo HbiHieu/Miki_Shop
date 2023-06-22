@@ -11,8 +11,12 @@ namespace Ntier.DAL.Interfaces
     public interface IProductsRepository
     {
         public Task AddProductAsync(ProductToAddDTO productToAdd );
+        public Task UpdateProductAsync(ProductToAddDTO productToAdd);
         public Task AddProductSizeDetailAsync( ICollection<StockDTO> stocks, string productId);
+        public Task UpdateProductSizeDetailAsync( ICollection<StockDTO> stocks, string productId);
         public Task<ICollection<Product>?>GetProductsAsync( ProductQueryParameters queryParameters );
+
+        public Task<int> GetQuantityProducts();
 
         public Task<Product> GetProductByIdAsync( string productId );
 

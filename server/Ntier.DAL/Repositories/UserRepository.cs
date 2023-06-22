@@ -77,7 +77,7 @@ namespace Ntier.DAL.Repositories
             }
         }
 
-        public async Task RemoveAccessTokenAsync(string userId)
+        public async Task RemoveRefreshTokenAsync(string userId)
         {
             try
             {

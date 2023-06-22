@@ -18,14 +18,12 @@ namespace Ntier.DAL.Repositories
             _context = context;
         }
 
-        public async Task<ICollection<ProductImage>> AddImagesAsync(ICollection<ProductImage> images)
+        public async Task AddImagesAsync(ICollection<ProductImage> images)
         {
             try
             {
                 await _context.ProductImages.AddRangeAsync(images);
                 await _context.SaveChangesAsync();
-                var imgs = await _context.ProductImages.ToListAsync();
-                return imgs;
             }
             catch ( Exception ex )
             {
@@ -33,13 +31,13 @@ namespace Ntier.DAL.Repositories
             }
         }
 
-        public async Task DeleteImagesAsync(string[] productsId)
+        public async Task DeleteImagesAsync( ImageDTO[] imagesDto)
         {
             try
             {
-                foreach (var productId in productsId)
+                foreach (var imageDTO in imagesDto)
                 {
-                    await _context.Database.ExecuteSqlRawAsync($@"DELETE FROM PRODUCT_IMAGE WHERE PRODUCT_ID = '{productId}'");
+                    await _context.Database.ExecuteSqlRawAsync($@"DELETE FROM PRODUCT_IMAGE WHERE PRODUCT_ID = '{imageDTO.ProductId}' AND [INDEX] = {imageDTO.Index}");
                 }
             }
             catch(Exception ex)

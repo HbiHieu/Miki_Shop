@@ -9,8 +9,8 @@ namespace Ntier.BLL.Interfaces
 {
     public interface IImageService
     {
-        public Task<ICollection<ImageDTO>> AddImageAsync(ICollection<ImageDTO> images);
+        public Task AddImageAsync(ICollection<ImageDTO> images);
 
-        public Task DeleteImagesAsync(string[] productsId);
+        public Task DeleteImagesAsync(ImageDTO[] imagesDto );
     }
 }
