@@ -14,7 +14,6 @@ namespace Ntier.API.Controllers
             _userService = userService;
         }
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetAllUser() {
             try
             {

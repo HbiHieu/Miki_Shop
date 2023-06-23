@@ -29,14 +29,12 @@ function ProductsPage(props) {
     try {
       const res = axios({
         method: 'GET',
-        //url: `http://localhost:3000/api/products/pagination?page=${page}&limitProduct=10&${sort}`,
-        url: `https://localhost:7226/api/Products?page=${page}&sortBy=${sort}`,
+        url: `http://miki-shop.somee.com/api/Products?page=${page}&sortBy=${sort}`,
       });
       res.then((response) => {
         const datas = response.data;
         const { data, pagination } = datas;
         const { _page, _limit, _totalRows } = pagination;
-        console.log(response);
         setSortList(data); //Get list of products
         setPageCount(Math.ceil(_totalRows / _limit));
       });

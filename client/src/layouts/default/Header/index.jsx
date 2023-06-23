@@ -11,25 +11,23 @@ import { dataUser } from 'src/recoils/dataUser';
 export function Header() {
 
    const [user, setUser] = useRecoilState(dataUser);
+   const [cart, setCart] = useRecoilState(cartState)
 
    const LogOut = () => {
-      setUser("");
+      setUser(null);
+      setCart([]);
       localStorage.clear();
-      console.log(user);
    };
 
    const [searchTerm, setSearchTerm] = useState('')
    const [products, setProducts] = useState([])
    const [dataSearch, setDataSearch] = useState(null)
    const [hiddenResult, setHiddenResult] = useState(false)
-
-   const cart = useRecoilValue(cartState);
    const [isSSR, setIsSSR] = useState(true);
 
    useEffect(() => {
       setIsSSR(false);
    }, []);
-   console.log(cart);
    //variable clear setTimeout
    const typingTimeOutRef = useRef(null)
    const router = useRouter()
@@ -206,7 +204,7 @@ export function Header() {
                         <UserIcon
                            className={'ml-[35px] cursor-pointer hover:opacity-60'}
                         />
-                        <div className='absolute bottom-[-138px] right-[-52px] z-20 hidden group-hover:block animate-growth'>
+                        <div className='absolute bottom-[-100px] right-[-52px] z-20 hidden group-hover:block animate-growth'>
                            <div className='border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent w-[0px] h-[0px] border-b-[12px] border-b-primary_5 shadow-lg ml-[120px]'></div>
                            <ul className='shadow-xl cursor-pointer bg-primary_5'>
                               <li
@@ -217,14 +215,6 @@ export function Header() {
                                  <span className='flex items-center justify-start'>
                                     <Account />
                                     <p className='ml-2'>Tài khoản của tôi</p>
-                                 </span>
-                              </li>
-                              <li className='w-[200px] text-left px-3 py-2 leading-7 text-base hover:bg-primary_2 hover:text-white font-bold'>
-                                 <span className='flex items-center justify-start'>
-                                    <Purchase
-                                       className={'w-[20px] h-[20px]'}
-                                    />
-                                    <p className='ml-3'>Đơn mua</p>
                                  </span>
                               </li>
                               <li className='w-[200px] text-left px-3 py-2 leading-7 text-base hover:bg-primary_2 hover:text-white font-bold'>

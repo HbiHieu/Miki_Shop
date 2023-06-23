@@ -12,5 +12,7 @@ namespace Ntier.DTO.DTO.Products
         public string sortBy { get; set; }
 
         public string order { get; set; }
+
+        public int limit { get; set; } = 4;
     }
 }

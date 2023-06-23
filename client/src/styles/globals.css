@@ -92,7 +92,7 @@
   display: none;
 }
 .inputLogin {
-  @apply flex rounded-[8px] w-full h-[50px] border-[1px] border-neutral_1 overflow-hidden bg-white;
+  @apply flex items-center rounded-[8px] w-full h-[50px] border-[1px] border-neutral_1 overflow-hidden bg-white;
 }
 
 .inputEmailLogin {

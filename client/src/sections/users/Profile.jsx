@@ -4,12 +4,19 @@ import Button from 'src/components/Button';
 import InfoUser from './InfoUser';
 import OderManagement from './OderManagement';
 import BreadCrumb from 'src/components/BreadCrumb/BreadCrumb';
+import { FormatMoney } from 'src/utils/formatMoney';
 
 
 function Profile({ user, products }) {
 
     const [state, setState] = useState('a')
     const [tab, setTab] = useState(1);
+
+    const formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        minimumFractionDigits: 0
+    })
 
     return (
         <div className='mt-10'>
@@ -75,18 +82,19 @@ function Profile({ user, products }) {
                                 return (<div className="w-[254px] h-[442px] relative mt-10">
                                     <Link href={`/products/${product.id}`}>
                                         <a>
-                                            <img src="/assets/images/product1.png" className="w-full rounded-imgB" />
+                                            <img src={product?.pictures?.[0].url} className="w-full rounded-imgB" />
                                             <h5 className="mt-6 text-center font-main font-bold text-xl tracking-[0.019rem] text-neutral_1">
-                                                Lira Earrings
+                                                {product.name}
                                             </h5>
                                             <h5 className="mt-[6px] text-center font-main font-bold text-xl tracking-[0.019rem] text-primary_2">
-                                                355.000đ
+                                                {formatter.format((product?.stocks?.[0]?.price))}
                                             </h5>
                                         </a>
                                     </Link>
-                                    <Button
-                                        title="Thêm vào giỏ hàng"
-                                        className="font-bold text-base tracking-[0.15px] text-center text-white 
+                                    <Link href={`/products/${product.id}`}>
+                                        <Button
+                                            title="Thêm vào giỏ hàng"
+                                            className="font-bold text-base tracking-[0.15px] text-center text-white 
                                     bg-[#251C17]
                                     w-full
                                     h-10
@@ -99,7 +107,8 @@ function Profile({ user, products }) {
                                      hover:border-[1px]
                                       hover:border-[#000]
                                     "
-                                    />
+                                        />
+                                    </Link>
                                 </div>)
                             })
                         }

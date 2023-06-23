@@ -25,15 +25,6 @@ export default function AddAndRemoveItems(props) {
     );
   };
 
-  const handleModifyQuantityApi = async (_id, quantity) => {
-    const res = await axios({
-      method: 'POST',
-      url: '/api/cart/updateCart',
-      data: { cartId: _id, quantity: quantity },
-    })
-    return console.log(res.data)
-  }
-
   return (
     <div className="flex items-center justify-between w-[104px] h-8">
       <button

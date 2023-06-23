@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "qegfFDzGbRG7hBJ+IUwI64+9quEEXFDQxHDWefs5mVoQ3zX1QXBcbu1Y3HFU0zXrVrZXJRnsOBL3T8gKQMfkgQ==",
+  "dgSpecHash": "R7Iclqj+1TpgvWCMkUaRDs+mV7YXnTsGOz0MmGzALYu+nxWsw8aeyFAcwrn+2tohF4oRAd8Q4O483gBQWVsxaA==",
   "success": true,
-  "projectFilePath": "C:\\coode\\Miki_Shop\\server\\Ntier.DAL\\Ntier.DAL.csproj",
+  "projectFilePath": "C:\\coode\\Miki\\Miki_Shop\\server\\Ntier.DAL\\Ntier.DAL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ToilaHieu\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\ToilaHieu\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",

@@ -1,35 +1,45 @@
 import Link from 'next/link';
 import Button from 'src/components/Button';
+import { motion } from 'framer-motion';
+import Animation from 'src/components/animations/Animation';
+import { BOTTOM_TOP, LEFT_RIGHT, SCALE_MIN, SCALE_ZOOM } from 'src/components/animations';
+
 export function AboutSection() {
   return (
-    <>
+    <motion.section
+      initial="offscreen"
+      whileInView="onscreen"
+      viewport={{ once: true, amount: 0.8 }}
+    >
       <div className="relative mx-[152px] mt-[120px] h-[537px]">
-        <p className="text-[32px] leading-[39px] font-bold absolute left-[1px] top-[0px] w-[214px] h-[39px]">
-          Về chúng tôi
-        </p>
-        <p className="font-playfair text-[48px] leading-[57.6px] absolute left-[2px] top-[95px] font-bold w-[554px] h-[114px]">
-          “Ngày mai phải tốt hơn ngày hôm nay”
-        </p>
-        <p className="text-base absolute top-[241px] left-[4px] w-[544px] h-[60px] text-left">
-          Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia
-          consequat duis enim velit mollit.
-          <br />
-          Exercitation veniam consequat sunt nostrud amet.
-        </p>
-        <Link href="/about">
-          <a>
+        <Animation scroll variant={LEFT_RIGHT}>
+          <p className="text-[32px] leading-[39px] font-bold absolute left-[1px] top-[0px] w-[214px] h-[39px]">
+            Về chúng tôi
+          </p>
+          <p className="font-playfair text-[48px] leading-[57.6px] absolute left-[2px] top-[95px] font-bold w-[554px] h-[114px]">
+            “Ngày mai phải tốt hơn ngày hôm nay”
+          </p>
+          <p className="text-base absolute top-[241px] left-[4px] w-[544px] h-[60px] text-left">
+            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia
+            consequat duis enim velit mollit.
+            <br />
+            Exercitation veniam consequat sunt nostrud amet.
+          </p>
+        </Animation>
+        <Animation className={'z-50 absolute min-w-full'} scroll variant={BOTTOM_TOP}>
+          <Link href="/about">
             <Button
               title={'Tìm hiểu thêm'}
               className={
-                'z-[3] absolute left-[0px] top-[400px] py-2 px-[46px] bg-btn text-white font-bold rounded-btnB'
+                'absolute left-[0px] top-[400px] py-2 px-[46px] bg-btn text-white font-bold rounded-btnB hover:bg-[#0000] hover:text-neutral_1 hover:border-solid hover:border-[1px] hover:border-[#000] z-[1000]'
               }
             />
-          </a>
-        </Link>
+          </Link>
+        </Animation>
         {/* circle border-style  */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="absolute top-[269px] right-[863px]"
+          className="absolute top-[269px] right-[863px] z-[20]"
           width="370"
           height="833"
           viewBox="0 0 370 833"
@@ -46,7 +56,7 @@ export function AboutSection() {
         </svg>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="absolute top-[403px] right-[996px]"
+          className="absolute top-[403px] right-[996px] z-[10]"
           width="237"
           height="566"
           viewBox="0 0 237 566"
@@ -81,8 +91,10 @@ export function AboutSection() {
 
         <div className="absolute w-[1041px] h-[1041px] rounded-full bg-circle2 left-[904px] top-[-221px] z-[1]"></div>
 
-        <div className="w-[548px] bg-[url('/assets/images/aboutsection.jpg')] rounded-imgB bg-cover bg-center bg-no-repeat absolute left-[558px] top-[0] h-[537px] z-[3] shadow-md"></div>
+        <Animation scroll variant={SCALE_ZOOM}>
+          <div className="w-[548px] bg-[url('/assets/images/aboutsection.jpg')] rounded-imgB bg-cover bg-center bg-no-repeat absolute left-[558px] top-[0] h-[537px] z-[3] shadow-md"></div>
+        </Animation>
       </div>
-    </>
+    </motion.section>
   );
 }

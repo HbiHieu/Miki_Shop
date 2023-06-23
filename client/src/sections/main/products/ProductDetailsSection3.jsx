@@ -1,7 +1,27 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import ProductCard from 'src/components/ProductCard'
 
 export default function ProductDetailsSection3() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    dataProducts();
+  }, []);
+
+  const dataProducts = async (data) => {
+    try {
+      const res = await axios({
+        method: 'GET',
+        url: `http://miki-shop.somee.com/api/Products?page=${1}&sortBy=name&order=asc&limit=${4}`,
+      });
+      const datas = res.data;
+      const { data, pagination } = datas;
+      setProducts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className='px-[152px] mt-[56px]'>
       <svg
@@ -24,17 +44,25 @@ export default function ProductDetailsSection3() {
       </svg>
       <h1 className='text-[32px] leading-[40px] font-bold text-neutral_1'>Sản phẩm đã xem </h1>
       <div className='mt-[68px] flex justify-between text-center'>
-        <ProductCard src='/assets/images/productCard_recently1.jpg' nameProduct='Lira Earrings1' price='355.000đ  ' />
-        <ProductCard src='/assets/images/productCard_recently2.jpg' nameProduct='Lira Earrings2' price='365.000đ  ' />
-        <ProductCard src='/assets/images/productCard_recently3.jpg' nameProduct='Lira Earrings3' price='395.000đ  ' />
-        <ProductCard src='/assets/images/productCard_recently4.jpg' nameProduct='Lira Earrings4' price='455.000đ  ' />
+        <ProductCard src='/assets/images/productCard_recently1.jpg' nameProduct='Lira Earrings1' price='355000  ' />
+        <ProductCard src='/assets/images/productCard_recently2.jpg' nameProduct='Lira Earrings2' price='365000  ' />
+        <ProductCard src='/assets/images/productCard_recently3.jpg' nameProduct='Lira Earrings3' price='395000 ' />
+        <ProductCard src='/assets/images/productCard_recently4.jpg' nameProduct='Lira Earrings4' price='455000  ' />
       </div>
       <h1 className='text-[32px] leading-[40px] font-bold text-neutral_1 mt-[120px]'>Có thể bạn cũng thích</h1>
       <div className='mt-[68px] flex justify-between text-center pb-[120px]'>
-        <ProductCard src='/assets/images/suggestions_productCard1.jpg' nameProduct='Lira Earrings5' price='155.000đ  ' />
-        <ProductCard src='/assets/images/suggestions_productCard2.jpg' nameProduct='Lira Earrings6' price='359.000đ  ' />
-        <ProductCard src='/assets/images/suggestions_productCard3.jpg' nameProduct='Lira Earrings7' price='655.000đ  ' />
-        <ProductCard src='/assets/images/suggestions_productCard4.jpg' nameProduct='Lira Earrings8' price='378.000đ  ' />
+        {
+          products?.map(item => {
+            return (
+              <ProductCard
+                src={`${item?.pictures[0]?.url}`}
+                nameProduct={item.name}
+                price={`${item?.stocks[0].price}`}
+                id={item.id}
+              />
+            )
+          })
+        }
       </div>
     </div>
   )

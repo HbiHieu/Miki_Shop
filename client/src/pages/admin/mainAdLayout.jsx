@@ -47,12 +47,10 @@ export default function MainAdLayout({ children }) {
                                                 <li className='p-2 hover:bg-gray-200'>Sản phẩm</li>
                                             </a>
                                         </Link>
-                                        <Link href='/admin/mgnUser'>
-                                            <a>
-                                                <li className='p-2 hover:bg-gray-200'>User</li>
-                                            </a>
-                                        </Link>
-                                        <li className='p-2 hover:bg-gray-200'>Banner</li>
+                                        <a>
+                                            <li className='p-2 cursor-pointer hover:bg-gray-200'>User</li>
+                                        </a>
+                                        <li className='p-2 cursor-pointer hover:bg-gray-200'>Banner</li>
                                     </ul>
                                 </div>
                             </div>)
@@ -83,10 +81,10 @@ export default function MainAdLayout({ children }) {
                                                 <li className='p-2 hover:bg-gray-200'>Tất cả</li>
                                             </a>
                                         </Link>
-                                        <li className='p-2 hover:bg-gray-200'>Chờ xác nhận</li>
-                                        <li className='p-2 hover:bg-gray-200'>Đang giao</li>
-                                        <li className='p-2 hover:bg-gray-200'>Đã giao</li>
-                                        <li className='p-2 hover:bg-gray-200'>Hủy</li>
+                                        <li className='p-2 cursor-pointer hover:bg-gray-200'>Chờ xác nhận</li>
+                                        <li className='p-2 cursor-pointer hover:bg-gray-200'>Đang giao</li>
+                                        <li className='p-2 cursor-pointer hover:bg-gray-200'>Đã giao</li>
+                                        <li className='p-2 cursor-pointer hover:bg-gray-200'>Hủy</li>
                                     </ul>
                                 </div>
                             </div>)

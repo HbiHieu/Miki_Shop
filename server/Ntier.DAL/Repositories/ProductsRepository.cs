@@ -48,8 +48,11 @@ namespace Ntier.DAL.Repositories
         {
             try
             {
-                string query = $@"DELETE FROM PRODUCT_SIZE_DETAIL";
-                await _context.Database.ExecuteSqlRawAsync(query);
+                foreach (StockDTO stock in stocks)
+                {
+                    string query = $@"DELETE FROM PRODUCT_SIZE_DETAIL WHERE PRODUCT_ID = '{productId}' AND SIZE_ID = {stock.sizeId} ";
+                    await _context.Database.ExecuteSqlRawAsync(query);
+                }
                 await AddProductSizeDetailAsync(stocks, productId);
             }
             catch(Exception ex)
@@ -125,11 +128,11 @@ namespace Ntier.DAL.Repositories
                 }
                 if (queryParameters.order == "desc")
                 {
-                    products = _context.Products.OrderByDescending(orderBy).Skip((queryParameters.page - 1) * 4).Take(4).ToList();
+                    products = _context.Products.OrderByDescending(orderBy).Skip( (queryParameters.page - 1) * queryParameters.limit).Take(queryParameters.limit).ToList();
                 }
                 else
                 {
-                products = _context.Products.OrderBy(orderBy).Skip((queryParameters.page - 1) * 4).Take(4).ToList();
+                products = _context.Products.OrderBy(orderBy).Skip((queryParameters.page - 1) * queryParameters.limit).Take(queryParameters.limit).ToList();
                 }
                 foreach (var product in products)
                 {

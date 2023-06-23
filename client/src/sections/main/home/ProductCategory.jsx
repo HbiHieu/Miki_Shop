@@ -1,13 +1,21 @@
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { BOTTOM_TOP, LEFT_RIGHT, RIGHT_LEFT } from 'src/components/animations';
+import Animation from 'src/components/animations/Animation';
 
 export function ProductCategorySection() {
   return (
-    <>
+    <motion.section
+      initial="offscreen"
+      whileInView="onscreen"
+      viewport={{ once: true, amount: 0.8 }}
+    >
       <div className="category w-full  relative h-[741px] mt-[60px]">
-        <Link href="/products">
-          <a>
-            <div
-              className=" drop-shadow-2xl drop-shadow-[(0px_4px_52px_rgba(15, 15, 15, 0.25))] 
+        <Animation scroll variant={LEFT_RIGHT}>
+          <Link href="/products">
+            <a>
+              <div
+                className=" drop-shadow-2xl drop-shadow-[(0px_4px_52px_rgba(15, 15, 15, 0.25))] 
               w-[254px] h-[254px] 
               leading-[28px]
               absolute
@@ -15,22 +23,21 @@ export function ProductCategorySection() {
               left-[152px]
               rounded-tl-imgB 
               overflow-hidden"
-            >
-              <img className="" src="/assets/images/category1.png" alt="" />
-              <h2
-                className="text-2xl font-main font-bold text-neutral_5
-              absolute bottom-6  left-[88px]   "
               >
-                Nhẫn
-              </h2>
-            </div>
-          </a>
-        </Link>
-
-        <Link href="/products">
-          <a>
-            <div
-              className=" drop-shadow-2xl drop-shadow-[(0px_4px_52px_rgba(15, 15, 15, 0.25))]
+                <img className="" src="/assets/images/category1.png" alt="" />
+                <h2
+                  className="text-2xl font-main font-bold text-neutral_5
+              absolute bottom-6  left-[88px]   "
+                >
+                  Nhẫn
+                </h2>
+              </div>
+            </a>
+          </Link>
+          <Link href="/products">
+            <a>
+              <div
+                className=" drop-shadow-2xl drop-shadow-[(0px_4px_52px_rgba(15, 15, 15, 0.25))]
                 w-[254px] h-[254px] 
                 
                 absolute
@@ -38,81 +45,87 @@ export function ProductCategorySection() {
                 left-[446px]
                 rounded-sm 
                 "
-            >
-              <img className="" src="/assets/images/category2.png" alt="" />
-              <h2 className="text-2xl font-main absolute bottom-6  left-[88px] font-bold text-neutral_5  ">
-                Đồng hồ
+              >
+                <img className="" src="/assets/images/category2.png" alt="" />
+                <h2 className="text-2xl font-main absolute bottom-6  left-[88px] font-bold text-neutral_5  ">
+                  Đồng hồ
+                </h2>
+              </div>
+            </a>
+          </Link>
+        </Animation>
+        <Animation scroll variant={RIGHT_LEFT}>
+          <Link href="/">
+            <a>
+              <h2 className="absolute block not-italic left-[728px] top-[163px]  p-0 uppercase leading-[48px] text-[40px] font-playfair  font-bold text-[#2D2D2D]   ">
+                Miki jewelry
               </h2>
-            </div>
-          </a>
-        </Link>
+            </a>
+          </Link>
+        </Animation>
 
-        <Link href="/">
-          <a>
-            <h2 className="absolute block not-italic left-[728px] top-[163px]  p-0 uppercase leading-[48px] text-[40px] font-playfair  font-bold text-[#2D2D2D]   ">
-              Miki jewelry
-            </h2>
-          </a>
-        </Link>
-
-        <Link href="/products">
-          <a>
-            <div
-              className=" drop-shadow-2xl drop-shadow-[(0px_4px_52px_rgba(15, 15, 15, 0.25))] w-[450px] h-[254px] overflow-hidden  
+        <Animation scroll variant={BOTTOM_TOP}>
+          <Link href="/products">
+            <a>
+              <div
+                className=" drop-shadow-2xl drop-shadow-[(0px_4px_52px_rgba(15, 15, 15, 0.25))] w-[450px] h-[254px] overflow-hidden  
               absolute
               top-[354px]
               left-[152px]
               rounded-bl-imgB text-center 
               "
-            >
-              <img className="translate-y-[-80px] " src="/assets/images/category3.jpg" alt="" />
-              <h2 className="absolute left-0 right-0 text-2xl font-bold font-main bottom-6 text-neutral_5 ">
-                Lắc tay
-              </h2>
-            </div>
-          </a>
-        </Link>
+              >
+                <img className="translate-y-[-80px] " src="/assets/images/category3.jpg" alt="" />
+                <h2 className="absolute left-0 right-0 text-2xl font-bold font-main bottom-6 text-neutral_5 ">
+                  Lắc tay
+                </h2>
+              </div>
+            </a>
+          </Link>
 
-        <Link href="/products">
-          <a>
-            <div
-              className="  drop-shadow-2xl drop-shadow-[(0px_4px_52px_rgba(15, 15, 15, 0.25))] w-[352px] h-[254px] overflow-hidden   
+          <Link href="/products">
+            <a>
+              <div
+                className="  drop-shadow-2xl drop-shadow-[(0px_4px_52px_rgba(15, 15, 15, 0.25))] w-[352px] h-[254px] overflow-hidden   
             absolute
             top-[354px]
             left-[642px]
             text-center
             "
-            >
-              <img
-                className=" translate-y-[-132px] w-full"
-                src="/assets/images/category4.jpg"
-                alt=""
-              />
-              <h2 className="text-2xl leading-[26px] font-main absolute bottom-6  left-[101px] font-bold text-neutral_5  ">
-                Dây chuyền
-              </h2>
-            </div>
-          </a>
-        </Link>
+              >
+                <img
+                  className=" translate-y-[-132px] w-full"
+                  src="/assets/images/category4.jpg"
+                  alt=""
+                />
+                <h2 className="text-2xl leading-[26px] font-main absolute bottom-6  left-[101px] font-bold text-neutral_5  ">
+                  Dây chuyền
+                </h2>
+              </div>
+            </a>
+          </Link>
+        </Animation>
 
-        <Link href="/products">
-          <a>
-            <div
-              className=" drop-shadow-2xl drop-shadow-[(0px_4px_52px_rgba(15, 15, 15, 0.25))] w-[254px] h-[548px] 
+        <Animation scroll variant={RIGHT_LEFT}>
+          <Link href="/products">
+            <a>
+              <div
+                className=" drop-shadow-2xl drop-shadow-[(0px_4px_52px_rgba(15, 15, 15, 0.25))] w-[254px] h-[548px] 
             overflow-hidden  
             text-center
             absolute
             top-[60px]
             left-[1034px]
             rounded-r-imgB   "
-            >
-              <img className=" h-full" src="/assets/images/category5.jpg" alt="" />
-              <h2 className=" text-2xl leading-[26px] font-main absolute bottom-6  left-0 right-0 font-bold text-neutral_5  ">
-                Bông tai
-              </h2>
-            </div>
-          </a>
-        </Link>
+              >
+                <img className="h-full " src="/assets/images/category5.jpg" alt="" />
+                <h2 className=" text-2xl leading-[26px] font-main absolute bottom-6  left-0 right-0 font-bold text-neutral_5  ">
+                  Bông tai
+                </h2>
+              </div>
+            </a>
+          </Link>
+        </Animation>
 
         {/* bg-circle */}
         <div
@@ -130,6 +143,6 @@ export function ProductCategorySection() {
         "
         ></div>
       </div>
-    </>
+    </motion.section>
   );
 }

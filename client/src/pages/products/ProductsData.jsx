@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRef } from 'react';
 
 import Button from 'src/components/Button';
+import Animation from 'src/components/animations/Animation';
 
 export default function Datas(props) {
   const { data } = props;
@@ -22,11 +23,13 @@ export default function Datas(props) {
               <div key={product.id} className="w-[254px] h-[442px] relative mt-10 border-none">
                 <Link href={`/products/${product.id}`}>
                   <a>
-                    <img
-                      src={product.pictures[0].url}
-                      className="w-full rounded-imgB h-[254px] "
-                      alt={product.name}
-                    />
+                    <Animation gestures>
+                      <img
+                        src={product.pictures[0].url}
+                        className="w-full rounded-imgB h-[254px] "
+                        alt={product.name}
+                      />
+                    </Animation>
                     <h5 className="mt-6 h-14 overflow-hidden text-center font-main font-bold text-xl tracking-[-1.9%] text-neutral_1">
                       {product.name}
                     </h5>

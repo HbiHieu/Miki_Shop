@@ -79,9 +79,6 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
         }
     }, [])
 
-    console.log(currentPro);
-    console.log(idPic);
-
     const onSubmit = async (data) => {
         try {
             if (currentPro.isEdit) {
@@ -100,7 +97,7 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
                     if (imagesToDelete.length != 0) {
                         await axiosClient({
                             method: 'DELETE',
-                            url: 'https://localhost:7226/api/Images/delete',
+                            url: 'http://miki-shop.somee.com/api/Images/delete',
                             data: imagesToDelete,
                         });
                         setIdPic([]);
@@ -112,7 +109,7 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
                 if (typeof mainPicture == 'string') {
                     const resPic = await axiosClient({
                         method: 'POST',
-                        url: 'https://localhost:7226/api/Images',
+                        url: 'http://miki-shop.somee.com/api/Images',
                         data: [{
                             url: mainPicture,
                             productId: currentPro.data.id,
@@ -138,27 +135,24 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
                 // //upload nhung anh chua day len sever
                 const resPic = await axiosClient({
                     method: 'POST',
-                    url: 'https://localhost:7226/api/Images',
+                    url: 'http://miki-shop.somee.com/api/Images',
                     data: picNoneConvertedIntoCloud,
                 });
-                console.log(picNoneConvertedIntoCloud);
                 // update product
                 const product = convertProductToRequest(data, currentPro.data.id);
                 const resData = await axiosClient({
                     method: 'PUT',
-                    url: 'https://localhost:7226/api/Products/update',
+                    url: 'http://miki-shop.somee.com/api/Products/update',
                     data: product,
                 });
-                console.log(product);
                 setUpdate((prev) => !prev);
             } else {
                 const product = convertProductToRequest(data, currentPro.data.id);
                 const resData = await axiosClient({
                     method: 'POST',
-                    url: 'https://localhost:7226/api/Products',
+                    url: 'http://miki-shop.somee.com/api/Products',
                     data: product,
                 })
-                console.log(resData);
                 // //neu la them moi
                 const images = [mainPicture, ...pictures].map((item, index) => {
                     return {
@@ -167,10 +161,9 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
                         index,
                     }
                 });
-                console.log(images);
                 const resPic = await axiosClient({
                     method: 'POST',
-                    url: 'https://localhost:7226/api/Images',
+                    url: 'http://miki-shop.somee.com/api/Images',
                     data: images,
                     // data la anh o dang base 64
                 });
@@ -197,13 +190,11 @@ export default function AddForm({ currentPro, setCurrentPro, setUpdate }) {
         reader.onload = function () {
             if (location == 'main') {
                 const picMainConvertB64 = reader.result
-                //console.log('PicmainConvertBase64 is ', picMainConvertB64);
                 setChangePic(true);
                 setMainPicture(picMainConvertB64);
             }
             else {
                 const picConvertB64 = reader.result
-                // console.log('PicSubConvertBase64 is ', picConvertB64);
                 setPictures(
                     (prev) => [...prev, picConvertB64]
                 )

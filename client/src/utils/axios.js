@@ -22,7 +22,7 @@ axiosClient.interceptors.request.use(async (config) => {
       try {
         const newAccessToken = await axios({
           method: 'POST',
-          url: `https://localhost:7226/api/Users/refreshToken?userId=${userId}`,
+          url: `http://miki-shop.somee.com/api/Users/refreshToken?userId=${userId}`,
         });
         localStorage.setItem('accessToken', newAccessToken.data.jwt);
         accessToken = newAccessToken.data.jwt;

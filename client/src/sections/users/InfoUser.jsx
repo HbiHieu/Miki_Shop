@@ -11,7 +11,6 @@ function InfoUser() {
 
     const toggle = () => {
         setIsOpen(!isOpen);
-        console.log(isOpen);
     }
 
     return (

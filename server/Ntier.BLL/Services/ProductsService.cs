@@ -87,7 +87,7 @@ namespace Ntier.BLL.Services
                     pagination = new Pagination
                     {
                         _page = queryParameters.page,
-                        _limit = 4,
+                        _limit = queryParameters.limit,
                         _totalRows = totalRow 
                     }
                 };

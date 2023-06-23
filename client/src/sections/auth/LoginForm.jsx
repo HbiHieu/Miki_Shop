@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
-import { FbLogin, GoogleIcon, LogoIconLogin } from 'src/components/icons';
+import { EyeIcon, EyeIconClose, FbLogin, GoogleIcon, LogoIconLogin } from 'src/components/icons';
 import * as yup from 'yup';
 import axios from 'axios';
 
@@ -12,6 +12,7 @@ import { axiosClient } from 'src/utils/axios';
 import { useSetRecoilState } from 'recoil';
 import { dataUser } from 'src/recoils/dataUser';
 import { signIn } from 'next-auth/react';
+import { toast } from 'react-toastify';
 
 const schema = yup.object().shape({
   email: yup.string().trim().required('Email hoặc số điện thoại của bạn đang trống!'),
@@ -21,6 +22,7 @@ export default function LoginFormSection() {
   const setUser = useSetRecoilState(dataUser);
   const router = useRouter();
   const [errorState, setError] = useState('');
+  const [isShow, setIsShow] = useState(false);
   const {
     register,
     handleSubmit,
@@ -33,17 +35,20 @@ export default function LoginFormSection() {
     },
   });
 
+  const handleShowPassword = () => {
+    setIsShow(prev => !prev);
+  }
+
   const onSubmit = async (data) => {
     const res = axios({
       method: 'POST',
-      url: 'https://localhost:7226/api/Users/login',
+      url: 'http://miki-shop.somee.com/api/Users/login',
       data: data,
     });
     res.then(() => router.push('/')).catch((e) => setError(e.response.data.message));
 
     res.then((rep) => {
       const dataUser = rep.data.data;
-      console.log(rep.data);
       const user = {
         role: dataUser.role,
         email: dataUser.email,
@@ -57,6 +62,7 @@ export default function LoginFormSection() {
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('expire_at', user.accessExpire.toString());
       localStorage.setItem('userId', user.userInforId);
+      toast.success("Login successfully");
     });
   };
 
@@ -125,10 +131,13 @@ export default function LoginFormSection() {
                   <div className="inputLogin mb-[2px]">
                     <input
                       className="inputEmailLogin"
-                      type="password"
+                      type={isShow ? "text" : "password"}
                       placeholder="Nhập mật khẩu"
                       {...register('password')}
                     />
+                    {
+                      isShow ? <EyeIcon handleCick={handleShowPassword} className={'w-8 h-8 mr-3 cursor-pointer'} /> : <EyeIconClose handleCick={handleShowPassword} className={'w-8 h-8 mr-3 cursor-pointer'} />
+                    }
                   </div>
                   <p className="mb-[24px] text-[15px] text-[#D2311B] h-[16px]">
                     {errors.password?.message}

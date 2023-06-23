@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Page from 'src/components/Page';
 import ToastMessage from 'src/components/ToastMessage';
 import MainLayout from 'src/layouts';
@@ -19,8 +19,8 @@ ProductDetails.getLayout = (page) => <MainLayout>{page}</MainLayout>;
 
 export default function ProductDetails() {
   const [product, setProduct] = useState();
-  const [isSsr, setIsSsr] = useState(true);
   const router = useRouter();
+  const ref = useRef();
 
   const [cart, setCart] = useRecoilState(cartState);
   //handle Tab UI
@@ -42,7 +42,6 @@ export default function ProductDetails() {
   const user = useRecoilValue(dataUser)
   const handleAddToCart = (product) => {
     const item = product.stocks.filter((item) => item.sizeId == +selectSizeState)[0];
-    console.log(product.stocks);
     const productId = product.id
     const size = +selectSizeState
     const name = product?.name
@@ -59,7 +58,6 @@ export default function ProductDetails() {
       userId,
       picture
     }
-    console.log(selectedPro);
     setCart([...cart, selectedPro]);
     setToast(true);
     setTimeout(() => {
@@ -72,13 +70,11 @@ export default function ProductDetails() {
         const fetch = async () => {
           const res = await axios({
             method: 'GET',
-            url: `https://localhost:7226/api/Products/${router.query.productId}`
+            url: `http://miki-shop.somee.com/api/Products/${router.query.productId}`
           })
           setProduct(res.data);
           setSelectSizeState(res.data?.stocks[0].sizeId);
-          console.log(res.data?.stocks[0].sizeId);
           setStock(res.data?.stocks?.[0]);
-          console.log(res.data?.stocks?.[0])
         }
         fetch();
       }
@@ -86,13 +82,11 @@ export default function ProductDetails() {
         console.log(ex);
       }
     }
-    setIsSsr(false);
   }, [router.isReady])
 
   useEffect(() => {
     const selectedStock = product?.stocks.find(stock => stock.sizeId == selectSizeState);
     setStock(selectedStock);
-    console.log(selectedStock);
   }, [selectSizeState])
   const [toast, setToast] = useState(false);
   return (
@@ -143,11 +137,17 @@ export default function ProductDetails() {
                 )
               })}
             </div>
-            <div className="pr-[40px]">
+            <div
+              className={`mr-[40px] w-[450px] h-[465px] `}
+              style={{
+                backgroundImage: `url(${product?.pictures[imageState - 1].url})`
+              }}
+            >
               <img
-                className="mb-[12px] w-[450px] h-[465px] border-[2px] border-neutral_3 rounded-imgB"
+                className="imagePreview mb-[12px] w-full h-full border-[2px] border-neutral_3 rounded-imgB"
                 src={product?.pictures[imageState - 1].url}
                 alt=""
+                ref={ref}
               />
             </div>
             <div className="min-w-[420px]">
@@ -248,7 +248,7 @@ export default function ProductDetails() {
         </div>
       </>
       <ProductDetailsSection2 product={product} />
-      <ProductDetailsSection3 product={product} />
+      <ProductDetailsSection3 />
     </div>
   );
 }

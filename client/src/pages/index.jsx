@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import Page from 'src/components/Page';
 import MainLayout from 'src/layouts';
 import {
@@ -11,7 +13,27 @@ import {
 
 HomePage.getLayout = (page) => <MainLayout>{page}</MainLayout>;
 
+
 export default function HomePage() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    dataProducts();
+  }, []);
+
+  const dataProducts = async (data) => {
+    try {
+      const res = await axios({
+        method: 'GET',
+        url: `http://miki-shop.somee.com/api/Products?page=${1}&sortBy=name&order=asc&limit=${12}`,
+      });
+      const datas = res.data;
+      const { data, pagination } = datas;
+      setProducts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div>
       <Page
@@ -24,7 +46,7 @@ export default function HomePage() {
       />
       <HeroSection />
       <AboutSection />
-      <BestSellerSection />
+      <BestSellerSection products={products} />
       <LatestCollectionSection />
       <ProductCategorySection />
       <svg

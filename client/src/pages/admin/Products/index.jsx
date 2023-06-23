@@ -23,7 +23,6 @@ export default function Product() {
 
     const [checkPro, setCheckPro] = useState([]);
 
-    console.log(checkPro);
     const handleChangeCheckPro = (e) => {
         const id = e.target.id;
         setCheckPro((prev) =>
@@ -42,15 +41,14 @@ export default function Product() {
         if (option == 'Xóa') {
             try {
                 const imagesToDelete = currentProductPage.map((item) => item.pictures.filter(picture => checkPro.includes(picture.productId))).flat();
-                console.log(imagesToDelete)
                 await axiosClient({
                     method: 'DELETE',
-                    url: 'https://localhost:7226/api/Images/delete',
+                    url: 'http://miki-shop.somee.com/api/Images/delete',
                     data: imagesToDelete,
                 });
                 const resDeleteProduct = await axiosClient({
                     method: 'DELETE',
-                    url: 'https://localhost:7226/api/Products/delete',
+                    url: 'http://miki-shop.somee.com/api/Products/delete',
                     data: checkPro,
                 });
                 notify();
@@ -103,7 +101,7 @@ export default function Product() {
         const fetchData = async () => {
             const res = await axios({
                 method: 'GET',
-                url: `https://localhost:7226/api/Products?page=${page}&sortBy=${sort}`,
+                url: `http://miki-shop.somee.com/api/Products?page=${page}&sortBy=${sort}`,
             });
             const { data, pagination } = res.data;
             const { _page, _limit, _totalRows } = pagination;

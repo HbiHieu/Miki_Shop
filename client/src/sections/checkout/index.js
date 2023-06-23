@@ -46,7 +46,6 @@ export default function Checkout() {
 
   const onSubmit = (data) => console.log(data);
 
-  console.log(watch('bankCard'));
   console.log(errors);
 
   const [orderPro, setOrderPro] = useState(useRecoilValue(cartState));

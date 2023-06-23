@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import { useRouter } from 'next/router';
 import { axiosClient } from 'src/utils/axios';
 import uniqid from 'uniqid';
+import { toast } from 'react-toastify';
 
 const schema = yup.object().shape({
   firstName: yup.string().required('*Bắt buộc'),
@@ -42,14 +43,17 @@ function RegisterForm() {
       id: uniqid(),
       email: data.email,
       password: data.password,
-      name: `${data.firstName} ${data.firstName}`
+      name: `${data.firstName} ${data.lastName}`
     }
     const res = axiosClient({
       method: 'POST',
-      url: 'https://localhost:7226/api/Users/register',
+      url: 'http://miki-shop.somee.com/api/Users/register',
       data: user
     });
-    res.then(() => router.push('/login'))
+    res.then(() => {
+      toast.success("Register successfully");
+      router.push('/login');
+    })
       .catch((e) => setError(e.response.data.message));
   };
 
